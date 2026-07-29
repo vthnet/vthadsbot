@@ -1,7 +1,7 @@
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from config import config
-from utils.language import t
+
 
 
 async def home_keyboard(user_id: int):
@@ -9,71 +9,66 @@ async def home_keyboard(user_id: int):
     kb = InlineKeyboardBuilder()
 
     kb.button(
-        text=f"📢 {await t(user_id, 'create_campaign')}",
+        text="📢 Create Campaign",
         callback_data="create_campaign"
     )
 
     kb.button(
-        text=f"📂 {await t(user_id, 'my_campaigns')}",
+        text="📂 My Campaigns",
         callback_data="my_campaigns"
     )
 
     kb.button(
-        text=f"👤 {await t(user_id, 'my_accounts')}",
+        text="👤 My Accounts",
         callback_data="my_accounts"
     )
 
     kb.button(
-        text=f"🛒 {await t(user_id, 'buy_accounts')}",
+        text="🛒 Buy Accounts",
         callback_data="buy_tg_acc"
     )
 
     kb.button(
-        text=f"➕ {await t(user_id, 'add_account')}",
+        text="➕ Add Account",
         callback_data="add_account"
     )
 
     kb.button(
-       text=f"🤖 {await t(user_id, 'auto_bio')}",
+      text="🤖 Auto Bio",
         callback_data="bio_home"
     )
 
     kb.button(
-        text=f"💎 {await t(user_id, 'subscription')}",
+        text="💎 Subscription",
         callback_data="subscription"
     )
 
     kb.button(
-        text=f"📊 {await t(user_id, 'dashboard')}",
+        text="📊 Dashboard",
         callback_data="dashboard"
     )
 
     kb.button(
-        text=f"💰 {await t(user_id, 'wallet')}",
+        text="💰 Wallet",
         callback_data="wallet"
     )
 
     kb.button(
-        text=f"💡 {await t(user_id, 'feedback')}",
+        text="💡 Feedback",
         callback_data="feedback"
     )
 
     kb.button(
-        text=f"⚙ {await t(user_id, 'settings')}",
-        callback_data="settings"
-    )
-
-    kb.button(
-        text=f"📖 {await t(user_id, 'guide')}",
+        text="📖 Guide",
         callback_data="guide"
     )
 
     kb.button(
-        text=f"🆘 {await t(user_id, 'support')}",
+       text="🆘 Support",
         callback_data="support"
     )
 
-    kb.adjust(2, 2, 2, 2, 2, 2, 1)
+    kb.adjust(2, 2, 2, 2, 2, 1)
 
     return kb.as_markup()
 
@@ -83,17 +78,17 @@ async def success_keyboard(user_id: int):
     kb = InlineKeyboardBuilder()
 
     kb.button(
-        text=f"🏠 {await t(user_id, 'home')}",
+        text="🏠 Home",
         callback_data="home"
     )
 
     kb.button(
-        text=f"👤 {await t(user_id, 'my_accounts')}",
+        text="👤 my_accounts",
         callback_data="my_accounts"
     )
 
     kb.button(
-        text=f"📢 {await t(user_id, 'create_campaign')}",
+        text="📢create_campaign",
         callback_data="create_campaign"
     )
 
@@ -107,12 +102,12 @@ async def back_keyboard(user_id: int):
     kb = InlineKeyboardBuilder()
 
     kb.button(
-        text=f"🏠 {await t(user_id, 'home')}",
+        text="🏠home",
         callback_data="home"
     )
 
     kb.button(
-        text=f"🔙 {await t(user_id, 'back')}",
+        text="🔙 back",
         callback_data="home"
     )
 

@@ -63,7 +63,7 @@ async def show_feedback(message_or_callback):
 
     text = """
 ⭐ <b>Rate VTH Ads Bot</b>
-
+-------------------------
 Please select your rating.
 """
 
@@ -113,7 +113,7 @@ async def rating_selected(
         callback,
         """
 ✍ <b>Write your Feedback</b>
-
+-------------------------
 Report bugs, suggest new features,
 or share your experience with VTH Ads Bot.
 """
@@ -134,33 +134,21 @@ async def receive_feedback(
         config.ADMINS[0],
         f"""
 💡 <b>New Feedback</b>
-
-⭐ Rating
-{rating}
-
-━━━━━━━━━━━━━━━━━━━━
-
-👤 User
-{message.from_user.first_name}
-
-🆔 User ID
-<code>{message.from_user.id}</code>
-
-📎 Username
-@{message.from_user.username or "None"}
-
-━━━━━━━━━━━━━━━━━━━━
-
-📝 Feedback
-
-{message.text}
+-------------------------
+⭐ Rating :{rating}
+-------------------------
+👤 User :{message.from_user.first_name}
+🆔 User ID :<code>{message.from_user.id}</code>
+📎 Username :@{message.from_user.username or "None"}
+-------------------------
+📝 Feedback :{message.text}
 """
     )
 
     await message.answer(
         """
 ✅ <b>Thank You!</b>
-
+-------------------------
 Your feedback has been received successfully.
 
 ❤️ We appreciate your support and will use your feedback to improve VTH Ads Bot.

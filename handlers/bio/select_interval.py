@@ -120,27 +120,19 @@ async def enable_rotation(
         callback,
         f"""
 ✅ <b>Auto Bio Rotation Enabled</b>
+-------------------------
+🟢 Status :<b>Enabled</b>
 
-━━━━━━━━━━━━━━━━━━━━
+📝 Selected Bios :<b>{len(bios)}</b>
 
-🟢 Status
-<b>Enabled</b>
-
-📝 Selected Bios
-<b>{len(bios)}</b>
-
-⏰ Interval
-<b>{interval_text}</b>
-
-━━━━━━━━━━━━━━━━━━━━
-
+⏰ Interval :<b>{interval_text}</b>
+-------------------------
 ✅ First bio has been
 applied immediately.
 
 The remaining bios will
 rotate automatically
-after every
-<b>{interval_text}</b>.
+after every :<b>{interval_text}</b>.
 """,
         bio_home_keyboard()
     )

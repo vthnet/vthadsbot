@@ -118,18 +118,18 @@ async def live_dashboard(
 
 f""" 
 🚀 <b>Campaign Dashboard</b>
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 🆔 Campaign ID :<code>{campaign.id}</code>
 🚦 Status :<b>{status}</b>
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 📤 Messages Sent :<b>{campaign.total_sent}</b>
 ❌ Failed :<b>{campaign.failed_sent}</b>
 🎯 Current Group :<b>{campaign.current_target or "Waiting..."}</b>
 👥 Progress :<b>{loop_text}</b>
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 ⚡ Send Delay :<b>{campaign.send_delay} Seconds</b>
 🔄 Repeat Delay :<b>{campaign.repeat_delay} Seconds</b>
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 🕒 Started :<b>{format_datetime(campaign.started_at)}</b>
 ⌛ Runtime :<b>{format_runtime(campaign.started_at)}</b>
 🏁 Finished :<b>{format_datetime(campaign.finished_at)}</b>

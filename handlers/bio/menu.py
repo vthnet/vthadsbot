@@ -33,10 +33,10 @@ async def bio_home(callback: CallbackQuery):
         await callback.answer(
             """
 🔒 PREMIUM FEATURE
-
-↪ Auto Bio Manager is available
-↪ only for Premium Members.
-━━━━━━━━━━━━━━━━━━━━
+-------------------------
+ Auto Bio Manager is available
+ only for Premium Members.
+-------------------------
 ✨ Features
 • Store up to 5 Bios
 • Automatic Bio Rotation
@@ -101,15 +101,14 @@ async def bio_home(callback: CallbackQuery):
         callback,
         f"""
 🤖 <b>Auto Bio Manager</b>
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
+
 📝 Saved Bios :<b>{len(bios)} / 5</b>
-
 🟢 Active Rotations :<b>{running}</b>
-
 ⚪ Available Accounts :<b>{available}</b>
-
 ⏱ Current Interval :<b>{current_interval}</b>
-━━━━━━━━━━━━━━━━━━━━━━━━━
+
+-------------------------
 Choose an option below.
 """,
         bio_home_keyboard()

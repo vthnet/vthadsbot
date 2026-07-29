@@ -92,28 +92,6 @@ class UserRepository:
                 await session.commit()
 
 
-    @staticmethod
-    async def update_language(
-        telegram_id: int,
-        language: str
-    ):
-
-        async with SessionLocal() as session:
-
-            result = await session.execute(
-                select(User).where(
-                    User.telegram_id == telegram_id
-                )
-            )
-
-            user = result.scalar_one_or_none()
-
-            if user:
-
-                user.language = language
-
-                await session.commit()
-
 
     @staticmethod
     async def add_wallet(
@@ -168,7 +146,7 @@ class UserRepository:
 
             result = await session.execute(
                 select(User).where(
-                    User.is_premium == True
+                    User.is_premium.is_(True)
                 )
             )
 
@@ -190,28 +168,3 @@ class UserRepository:
 
 
 
-    @staticmethod
-    async def update_language(
-        telegram_id: int,
-        language: str
-    ):
-
-        async with SessionLocal() as session:
-
-            result = await session.execute(
-                select(User).where(
-                    User.telegram_id == telegram_id
-                )
-            )
-
-            user = result.scalar_one_or_none()
-
-            if user:
-
-                user.language = language
-
-                await session.commit()
-
-                return True
-
-            return False

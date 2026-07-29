@@ -1,9 +1,8 @@
 from aiogram import Router, F
 from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
-
 from keyboards.inline import home_keyboard
-
+import time
 from database.repository.user_repo import UserRepository
 from services.logger.logger import send_log
 
@@ -21,10 +20,14 @@ from services.cache.dashboard_cache import (
     get as dashboard_get,
     set as dashboard_set,
 )
+
+from services.cache.home_cache import (
+    get as home_get,
+    set as home_set,
+)
 from aiogram.fsm.context import FSMContext
 from utils.smart_edit import smart_edit
 from database.repository.bot_setting_repo import BotSettingRepository
-from utils.language import t
 
 
 
@@ -36,9 +39,9 @@ async def dashboard_text(user):
         return cached
 
     text = f"""
-👋 <b>{await t(user.telegram_id, "welcome_user")}</b>
+👋 <b>Welcome!</b>
 
-{await t(user.telegram_id, "choose_option")}
+Choose an option below.
 """.replace(
         "{name}",
         user.first_name
@@ -62,14 +65,26 @@ async def send_home(
         user.telegram_id
     )
 
-    setting = await BotSettingRepository.get(
-        "home"
-    )
+    setting = home_get("home")
 
-    if setting and setting.text:
+    if setting is None:
+
+        db = await BotSettingRepository.get("home")
+
+        if db:
+
+            setting = {
+                "text": db.text,
+                "media_type": db.media_type,
+                "file_id": db.file_id,
+            }
+
+            home_set("home", setting)
+
+    if setting and setting.get("text"):
 
         text = (
-            setting.text
+            setting["text"]
             .replace("{name}", user.first_name)
             .replace("{username}", user.username or "None")
             .replace("{userid}", str(user.telegram_id))
@@ -77,26 +92,51 @@ async def send_home(
 
     else:
 
-        text = await dashboard_text(
-            user
-        )
+        text = await dashboard_text(user)
 
-    if edit:
+    if setting and setting.get("media_type") == "photo":
 
-        await target.edit_text(
-            text,
-            reply_markup=keyboard
-        )
+        if edit:
+
+            try:
+                await target.delete()
+            except:
+                pass
+
+            await target.answer_photo(
+                setting["file_id"],
+                caption=text,
+                reply_markup=keyboard
+            )
+
+        else:
+
+            await target.answer_photo(
+                setting["file_id"],
+                caption=text,
+                reply_markup=keyboard
+            )
 
     else:
 
-        await target.answer(
-            text,
-            reply_markup=keyboard
-        )
+        if edit:
+
+            await target.edit_text(
+                text,
+                reply_markup=keyboard
+            )
+
+        else:
+
+            await target.answer(
+                text,
+                reply_markup=keyboard
+            )
 
 @router.message(CommandStart())
 async def start(message: Message):
+
+    total_timer = time.perf_counter()
 
     if maintenance_enabled():
 
@@ -111,22 +151,36 @@ Please try again later.
         )
         return
 
+    timer = time.perf_counter()
+
     if not await check_force_join(
         message.from_user.id
     ):
+
+        print(f"Force Join: {time.perf_counter() - timer:.3f}s")
         return await force_join_message(message)
+
+    print(f"Force Join: {time.perf_counter() - timer:.3f}s")
+
+    timer = time.perf_counter()
 
     user = await UserRepository.get_user(
         message.from_user.id
     )
 
+    print(f"Get User: {time.perf_counter() - timer:.3f}s")
+
     if user is None:
+
+        timer = time.perf_counter()
 
         user = await UserRepository.create_user(
             telegram_id=message.from_user.id,
             username=message.from_user.username,
             first_name=message.from_user.first_name,
         )
+
+        print(f"Create User: {time.perf_counter() - timer:.3f}s")
 
         await send_log(
             f"""
@@ -140,19 +194,23 @@ Please try again later.
 """
         )
 
+    timer = time.perf_counter()
+
     await send_home(
         message,
         user
     )
 
-
-
+    print(f"Send Home: {time.perf_counter() - timer:.3f}s")
+    print(f"START TOTAL: {time.perf_counter() - total_timer:.3f}s")
 
 @router.callback_query(F.data == "home")
 async def home_callback(
     callback: CallbackQuery,
     state: FSMContext
 ):
+
+    total_timer = time.perf_counter()
 
     if maintenance_enabled():
 
@@ -162,16 +220,28 @@ async def home_callback(
         )
         return
 
+    timer = time.perf_counter()
+
     if not await check_force_join(
         callback.from_user.id
     ):
         return await force_join_callback(callback)
 
+    print(f"Force Join: {time.perf_counter() - timer:.3f}s")
+
+    timer = time.perf_counter()
+
     await state.clear()
+
+    print(f"State Clear: {time.perf_counter() - timer:.3f}s")
+
+    timer = time.perf_counter()
 
     user = await UserRepository.get_user(
         callback.from_user.id
     )
+
+    print(f"Get User: {time.perf_counter() - timer:.3f}s")
 
     if not user:
 
@@ -181,10 +251,15 @@ async def home_callback(
         )
         return
 
+    timer = time.perf_counter()
+
     await send_home(
         callback.message,
         user,
         edit=True
     )
+
+    print(f"Send Home: {time.perf_counter() - timer:.3f}s")
+    print(f"HOME TOTAL: {time.perf_counter() - total_timer:.3f}s")
 
     await callback.answer()

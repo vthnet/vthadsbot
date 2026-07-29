@@ -38,14 +38,13 @@ async def buy_premium(callback: CallbackQuery):
     await callback.message.edit_text(
         f"""
 👑 <b>VTH Premium Membership</b>
-
+-------------------------
 💰 Price :<b>{PRICE} / x $</b>
 ♾ Lifetime Membership
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 UPI ID (₹) :<code>{UPI_ID}</code>
 Binance uid ($): <code></code>
-
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 •After payment,Click <b>I've Paid</b>
 
 •Admin will verify your payment and activate Premium.
@@ -71,11 +70,11 @@ async def premium_paid(
         """
 💎 <b>Premium Purchase</b>
 Please send the following details in ONE message.
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 🆔 Telegram ID
 👤 Sender Account Name
 💳 UTR / Transaction ID
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 Example:
 
 <code>Telegram ID :123456789
@@ -114,11 +113,11 @@ async def receive_payment_details(
         ADMIN_ID,
         f"""
 💎 <b>New Premium Purchase</b>
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 👤 User :{message.from_user.first_name}
 🆔 User ID :<code>{message.from_user.id}</code>
 📎 Username :@{message.from_user.username or "None"}
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 {message.text}
 """,
         reply_markup=kb
@@ -153,7 +152,7 @@ async def approve_premium(callback: CallbackQuery):
         user_id,
         """
 🎉 <b>Premium Activated</b>
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 Congratulations!
 
 Your Lifetime Premium Membership
@@ -185,7 +184,7 @@ async def reject_premium(callback: CallbackQuery):
         user_id,
         """
 ❌ <b>Payment Rejected</b>
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 Your payment could not be verified.
 •Reason : Fake payment proofs / payment not found
 •Please contact :@vthnetsupport

@@ -35,7 +35,7 @@ async def add_bio(callback: CallbackQuery, state: FSMContext):
         await callback.answer(
             """
 ❌ BIO LIMIT REACHED
-
+-------------------------
 You can store a maximum
 of 5 bios.
 
@@ -54,13 +54,9 @@ before adding a new one.
         callback,
         """
 📝 <b>Add New Bio</b>
-
-━━━━━━━━━━━━━━━━━━━━
-
+-------------------------
 Send the bio text.
-
 • Maximum 70 characters.
-
 • Type /cancel to cancel.
 """,
         back_keyboard()
@@ -122,9 +118,8 @@ is 70 characters.
     await message.answer(
     f"""
 ✅ <b>Bio Added Successfully</b>
-━━━━━━━━━━━━━━━━━━━━
-Your bio has been saved.
-
+-------------------------
+•Your bio has been saved.
 📝 Total Bios :<b>{total} / 5</b>
 """,
     reply_markup=back_keyboard()

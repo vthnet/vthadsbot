@@ -51,7 +51,6 @@ from handlers.admin.broadcast import router as broadcast_router
 from handlers.set_commands import set_commands
 from handlers.feedback import router as feedback_router
 from handlers.admin import content_manager
-from handlers.user import settings
 from handlers.guide import router as guide_router
 from handlers.support.support import router as support_router
 from handlers.admin.support_reply import router as support_reply_router
@@ -73,14 +72,6 @@ from services.bio.default_bio_worker import (
 )
 from handlers.bio.change_interval import (
     router as bio_change_interval_router
-)
-
-from handlers.settings.menu import (
-    router as settings_router
-)
-
-from handlers.settings.language import (
-    router as language_router
 )
 
 
@@ -129,8 +120,6 @@ async def main():
     dp.include_router(
         account_manage_router
     )
-
-    dp.include_router(settings.router)
 
     dp.include_router(
     support_router
@@ -214,8 +203,7 @@ async def main():
     dp.include_router(bio_interval_router)
     dp.include_router(bio_time_router)
     dp.include_router(bio_change_interval_router)
-    dp.include_router(settings_router)
-    dp.include_router(language_router)
+
 
     # Start campaign worker ONLY ONCE
     asyncio.create_task(

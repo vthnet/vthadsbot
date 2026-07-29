@@ -18,10 +18,8 @@ async def custom_time(
         callback,
         """
 🕒 <b>Custom Bio Rotation Time</b>
-
-━━━━━━━━━━━━━━━━━━━━
-
-Choose how often your
+-------------------------
+•Choose how often your
 Telegram bio should
 change automatically.
 
@@ -29,8 +27,7 @@ change automatically.
 increase Telegram limits.
 
 <b>Recommended:</b> 1 Hour
-
-━━━━━━━━━━━━━━━━━━━━
+-------------------------
 """,
         time_keyboard()
     )
@@ -78,17 +75,10 @@ in the next update.
         callback,
         f"""
 ✅ <b>Interval Selected</b>
-
-━━━━━━━━━━━━━━━━━━━━
-
-Selected
-
-<b>{names[interval]}</b>
-
-━━━━━━━━━━━━━━━━━━━━
-
-Click Continue
-to enable
+-------------------------
+Selected :<b>{names[interval]}</b>
+-------------------------
+Click Continue to enable
 Auto Bio Rotation.
 """,
         __import__(

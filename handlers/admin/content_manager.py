@@ -87,15 +87,8 @@ async def cms_page(
 📝 <b>{PAGES[page]}</b>
 
 Send:
-
 • Text
-
 • Photo + Caption
-
-• Video + Caption
-
-• Animation + Caption
-
 HTML is supported.
 
 After sending you'll receive a preview.
@@ -112,19 +105,25 @@ async def preview_content(
 ):
 
     kb = InlineKeyboardMarkup(
-        inline_keyboard=[
-            [
-                InlineKeyboardButton(
-                    text="✅ Save",
-                    callback_data="cms_save"
-                ),
-                InlineKeyboardButton(
-                    text="❌ Cancel",
-                    callback_data="cms_cancel"
-                ),
-            ]
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(
+                text="✅ Save",
+                callback_data="cms_save"
+            ),
+            InlineKeyboardButton(
+                text="🗑 Remove Image",
+                callback_data="cms_remove_image"
+            ),
+        ],
+        [
+            InlineKeyboardButton(
+                text="❌ Cancel",
+                callback_data="cms_cancel"
+            )
         ]
-    )
+    ]
+)
 
     media_type = None
     file_id = None
@@ -136,28 +135,6 @@ async def preview_content(
         file_id = message.photo[-1].file_id
 
         await message.answer_photo(
-            file_id,
-            caption=text,
-            reply_markup=kb
-        )
-
-    elif message.video:
-
-        media_type = "video"
-        file_id = message.video.file_id
-
-        await message.answer_video(
-            file_id,
-            caption=text,
-            reply_markup=kb
-        )
-
-    elif message.animation:
-
-        media_type = "animation"
-        file_id = message.animation.file_id
-
-        await message.answer_animation(
             file_id,
             caption=text,
             reply_markup=kb
@@ -192,6 +169,24 @@ async def cms_cancel(
     await callback.answer()
 
 
+@router.callback_query(F.data == "cms_remove_image")
+async def cms_remove_image(
+    callback: CallbackQuery,
+    state: FSMContext
+):
+    data = await state.get_data()
+
+    data["media_type"] = None
+    data["file_id"] = None
+
+    await state.update_data(**data)
+
+    await callback.answer("🗑 Image removed.")
+
+    await callback.message.edit_text(
+        data.get("text") or "No text."
+    ) 
+
 @router.callback_query(F.data == "cms_save")
 async def cms_save(
     callback: CallbackQuery,
@@ -207,6 +202,20 @@ async def cms_save(
         file_id=data["file_id"],
         admin_id=callback.from_user.id,
     )
+
+
+    from services.cache.home_cache import set
+
+    set(
+        data["page"],
+    {
+        "text": data["text"],
+        "media_type": data["media_type"],
+        "file_id": data["file_id"],
+    },
+)
+
+
 
     await state.clear()
 

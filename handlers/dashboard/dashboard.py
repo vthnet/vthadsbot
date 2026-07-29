@@ -37,26 +37,26 @@ async def dashboard(callback: CallbackQuery):
         callback,
         f"""
 📊 <b>Your Dashboard</b>
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 <blockquote>👤 <b>Accounts</b></blockquote>
 🟢 Active :<b>{stats["active_accounts"]}</b>
 🔴 Expired :<b>{stats["expired_accounts"]}</b>
 📱 Total :<b>{stats["total_accounts"]}/{stats["account_limit"]}</b>
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 <blockquote>📢 <b>Campaigns</b></blockquote>
 📂 Total :<b>{stats["total_campaigns"]}</b>
 🟢 Running :<b>{stats["running_campaigns"]}</b>
 ⏸ Stopped :<b>{stats["stopped_campaigns"]}</b>
 ✅ Completed :<b>{stats["completed_campaigns"]}</b>
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 <blockquote>🤖 <b>Auto Bio</b></blockquote>
 📝 Saved Bios :<b>{stats["saved_bios"]}/5</b>
 🔄 Rotation :<b>{rotation}</b>
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 <blockquote>📨 <b>Messages</b></blockquote>
 ✅ Sent :<b>{stats["total_sent"]}</b>
 ❌ Failed :<b>{stats["failed_sent"]}</b>
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 {membership}
 """,
         dashboard_keyboard()

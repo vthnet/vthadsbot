@@ -33,10 +33,6 @@ class User(Base):
         String(255),
     )
 
-    language: Mapped[str] = mapped_column(
-        String(10),
-        default="en",
-    )
 
     account_slots: Mapped[int] = mapped_column(
         Integer,

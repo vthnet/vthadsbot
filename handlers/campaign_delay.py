@@ -59,15 +59,12 @@ async def select_delay(
     await callback.message.edit_text(
         f"""
 📋 <b>Campaign Summary</b>
-
+-------------------------
 🔁 Loops: <b>{loop_text}</b>
 
 ⏱ Loop Delay: <b>{delay_text}</b>
-
-━━━━━━━━━━━━━━
-
+-------------------------
 ⚠️ <i>Lower delay increases the risk of spam detection and account limitations.</i>
-
 🚀 Ready to start?
 """,
         reply_markup=confirm_campaign_keyboard()

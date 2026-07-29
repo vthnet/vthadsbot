@@ -19,11 +19,11 @@ async def wallet(callback: CallbackQuery):
     await callback.answer(
         f"""
 💰 VTH WALLET
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 💵 Balance :₹{balance}
 
 🎁 Referral Earnings :₹{referral}
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 💳 Deposit funds from the
 Wallet section anytime.
 

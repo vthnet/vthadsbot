@@ -37,26 +37,15 @@ async def buy_tg_acc(callback: CallbackQuery):
     await smart_edit(
         callback,
         """
-🛒 <b>Telegram Accounts Marketplace</b>
-
-━━━━━━━━━━━━━━━━━━━━
-
-Buy high-quality Telegram accounts from our trusted marketplace.
-
-✅ Fresh Accounts
-
-✅ Aged Accounts
-
-✅ Premium Accounts
-
-✅ Bulk Orders
-
-✅ Instant Delivery
-
-✅ Trusted Seller
-
-━━━━━━━━━━━━━━━━━━━━
-
+🛒 <b>Telegram Accounts Store</b>
+-------------------------
+Buy high-quality Telegram accounts from our trusted VTH source
+•VTH network's own selling hub 
+• Fully automated , purchase good quality tg acc 24x7 
+• 100+ countries available
+• Trusted by 1000+ users
+• Always trusted , 24x7 support team available
+-------------------------
 Choose an option below to continue.
 """,
         kb.as_markup()

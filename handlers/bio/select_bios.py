@@ -66,18 +66,11 @@ Maximum 5 bios allowed.
 
     text = f"""
 📝 <b>Select Bios</b>
+-------------------------
+•Selected :<b>{len(selected)} / 5</b>
 
-━━━━━━━━━━━━━━━━━━━━
-
-Selected
-
-<b>{len(selected)} / 5</b>
-
-Minimum Required
-
-<b>2</b>
-
-━━━━━━━━━━━━━━━━━━━━
+•Minimum Required :<b>2</b>
+-------------------------
 """
 
     buttons = []
@@ -138,17 +131,11 @@ Please select at least
         callback,
         """
 ⏰ <b>Rotation Interval</b>
+-------------------------
 
-━━━━━━━━━━━━━━━━━━━━
-
-Default Interval
-
-<b>1 Hour</b>
-
-Recommended for
-account safety.
-
-━━━━━━━━━━━━━━━━━━━━
+•Default Interval :<b>1 Hour</b>
+•Recommended for account safety.
+-------------------------
 """,
         interval_keyboard()
     )

@@ -125,27 +125,19 @@ async def start_campaign(
     await callback.message.edit_text(
         f"""
 ✅ <b>Campaign Started Successfully</b>
+-------------------------
+🆔 <b>Campaign ID</b> :<code>{campaign.id}</code>
 
-🆔 <b>Campaign ID</b>
-<code>{campaign.id}</code>
+👥 <b>Total Groups</b> :{len(selected)}
 
-👥 <b>Total Groups</b>
-{len(selected)}
+🔁 <b>Loops</b> :{"∞ Infinite" if data["infinite"] else data["loop_count"]}
 
-🔁 <b>Loops</b>
-{"∞ Infinite" if data["infinite"] else data["loop_count"]}
+⚡ <b>Between Groups</b> :3 Seconds
 
-⚡ <b>Between Groups</b>
-3 Seconds
+⏱ <b>Loop Delay</b> :{delay_text}
 
-⏱ <b>Loop Delay</b>
-{delay_text}
-
-📡 <b>Status</b>
-🟢 Running
-
-━━━━━━━━━━━━━━
-
+📡 <b>Status</b> :🟢 Running
+-------------------------
 ⚠️ Keep this account online until the campaign finishes.
 """
     )

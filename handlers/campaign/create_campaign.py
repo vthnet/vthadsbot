@@ -159,15 +159,13 @@ This usually takes 1–3 seconds.
             callback,
             """
 ❌ <b>No Active Account</b>
-━━━━━━━━━━━━━━━━━━━━━━━━━
-
+-------------------------
 • No Telegram account
 has been added yet.
 
 • Please add a Telegram
 account to continue.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 """,
             no_account_keyboard()
         )
@@ -198,8 +196,7 @@ account to continue.
             callback,
             """
 ❌ <b>No Active Account</b>
-━━━━━━━━━━━━━━━━━━━━━━━━━
-
+-------------------------
 No active Telegram account
 is available.
 
@@ -207,10 +204,8 @@ Possible reasons:
 
 • All Telegram sessions
   have expired.
-
 • Your account was logged out.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 Please remove the expired
 account and add a new one.
 """,
@@ -226,10 +221,10 @@ account and add a new one.
     callback,
     f"""
 📢 <b>Create Campaign</b>
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 <b>Step 1 / 5</b>
 {campaign_progress(1)}
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 👤 <b>Select Telegram Account</b>
 
 • Choose the Telegram account
@@ -272,10 +267,10 @@ async def select_account(
     await callback.message.edit_text(
     f"""
 📢 <b>Create Campaign</b>
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 <b>Step 2 / 5</b>
 {campaign_progress(2)}
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 🎯 <b>Select Campaign Target</b>
 
 • Choose where you want to send your campaign.
@@ -368,10 +363,10 @@ async def all_groups(
     callback,
     f"""
 📢 <b>Create Campaign</b>
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 <b>Step 3 / 5</b>
 {campaign_progress(3)}
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 📂 <b>Select Groups</b>
 
 • Choose one or more groups for this campaign.
@@ -758,10 +753,10 @@ async def continue_groups(
     callback,
     f"""
 📢 <b>Create Campaign</b>
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 <b>Step 4 / 5</b>
 {campaign_progress(4)}
-━━━━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 📝 <b>Send Campaign Post</b>
 
 Supported:

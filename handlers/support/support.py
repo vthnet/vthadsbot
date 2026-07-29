@@ -37,11 +37,11 @@ async def support(callback: CallbackQuery):
     await callback.message.edit_text(
         """
 🆘 <b>VTH SUPPORT</b>
-━━━━━━━━━━━━━━━━━━━━━━━━━
+--------------------------
 • Thank you for choosing <b>VTH Ads Bot</b>. ❤️
-↪ If you experience any bug, payment issue, campaign issue, or have any suggestion, please use the <b>Report Problem</b> button below.
-↪ For direct support:@vthnetsupport
-━━━━━━━━━━━━━━━━━━━━━━━━━
+• If you experience any bug, payment issue, campaign issue, or have any suggestion, please use the <b>Report Problem</b> button below.
+• For direct support:@vthnetsupport
+--------------------------
 ⚠ <b>Note</b>
 
 • Due to our multiple VTH services, direct replies may take some time.
@@ -67,7 +67,7 @@ async def report_problem(
     await callback.message.edit_text(
         """
 📝 <b>Describe Your Issue</b>
-
+--------------------------
 • Please explain your issue in one paragraph.
 • The more details you provide, the easier it will be for our support team to help you.
 """
@@ -93,7 +93,7 @@ async def receive_issue(
     await message.answer(
         """
 📬 <b>Contact Username</b>
-
+-------------------------
 Please send the Telegram username where our support team can contact you.
 
 Example:@yourusername
@@ -112,10 +112,9 @@ async def receive_contact(
         await message.answer(
             """
 ❌ Invalid Username
-
+-------------------------
 •Please send a valid Telegram username.
-
-↪ Example:@yourusername
+ Example:@yourusername
 """
         )
         return
@@ -128,12 +127,12 @@ async def receive_contact(
         config.ADMINS[0],
         f"""
 🚨 <b>NEW SUPPORT REQUEST</b>
-━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 👤 <b>Name</b> :{message.from_user.first_name}
 🆔 <b>User ID</b> :<code>{message.from_user.id}</code>
 📎 <b>Telegram Username</b> :{message.from_user.username or "None"}
 📬 <b>Contact Username</b> :{message.text}
-━━━━━━━━━━━━━━━━━━━━━━
+-------------------------
 📝 <b>Issue</b>
 
 {issue}
@@ -164,7 +163,7 @@ We truly appreciate you for using our services.
 ↪ ✅ Your support request has been submitted successfully.
 ↪ 📞 Our support team will contact you using the username you provided.
 ↪ ⏳ Please allow some time for a response.</blockquote>
-      
+      -------------------------
       🚀 Powered by VTH Network
 """
     )

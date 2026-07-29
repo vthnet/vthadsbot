@@ -14,12 +14,11 @@ PAGES = {
 
     "support": """
 🆘 <b>Support Center</b>
-━━━━━━━━━━━━━━━━━━━━
+-------------------------
 Need help?
 
 Contact @vthnetsupport for any issue related to campaigns, accounts or payments.
-
-━━━━━━━━━━━━━━━━━━━━
+-------------------------
 💬 Response Time
 Usually within 24 hours.
 """

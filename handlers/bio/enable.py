@@ -37,19 +37,14 @@ async def enable_bio(callback: CallbackQuery):
             callback,
             f"""
 ⚠ <b>Minimum 2 Bios Required</b>
+-------------------------
+You currently have :<b>{len(bios)}</b> saved bio(s).
 
-━━━━━━━━━━━━━━━━━━━━
-
-You currently have
-<b>{len(bios)}</b> saved bio(s).
-
-Auto Bio Rotation requires
+•Auto Bio Rotation requires
 at least <b>2 bios</b>.
-
-Please add another bio
+•Please add another bio
 to continue.
-
-━━━━━━━━━━━━━━━━━━━━
+-------------------------
 """,
             minimum_bio_keyboard()
         )
@@ -111,20 +106,15 @@ was found.
             callback,
             """
 ❌ <b>No Active Account</b>
-
-━━━━━━━━━━━━━━━━━━━━
-
+-------------------------
 No active Telegram account
 is available.
 
 Possible reasons:
-
 • No account has been added.
-
 • All Telegram sessions
 have expired.
-
-━━━━━━━━━━━━━━━━━━━━
+-------------------------
 
 Please add a Telegram
 account to continue.
@@ -167,15 +157,13 @@ account to continue.
         callback,
         """
 📱 <b>Select Telegram Account</b>
-
-━━━━━━━━━━━━━━━━━━━━
-
-Choose the account
-you want to use for
+-------------------------
+•Choose the account you want to use for
 Auto Bio Rotation.
 
 🟢 = Already Enabled
 ⚪ = Available
+-------------------------
 """,
         kb.as_markup()
     )
