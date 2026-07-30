@@ -38,19 +38,13 @@ async def account_details(callback: CallbackQuery):
 
     text = f"""
 👤 <b>{account.account_name}</b>
+--------------------------------------------------
+📱 Phone :<code>{account.phone}</code>
 
-━━━━━━━━━━━━━━━━━━━━━━
+📊 Status :{"🟢 Active" if status else "🔴 Session Expired"}
 
-📱 Phone
-<code>{account.phone}</code>
-
-📊 Status
-{"🟢 Active" if status else "🔴 Session Expired"}
-
-🆔 Account ID
-<code>{account.id}</code>
-
-━━━━━━━━━━━━━━━━━━━━━━
+🆔 Account ID :<code>{account.id}</code>
+--------------------------------------------------
 """
 
     await callback.message.edit_text(

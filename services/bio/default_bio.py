@@ -3,8 +3,8 @@ from services.bio.get_bio import get_bio
 
 
 DEFAULT_BIO = """
-free ads bot @vthadsbot |
-⚡ Telegram Advertising
+automated ads via • @vthadsbot |
+⚡ Telegram Advertising.
 🌐 @vthnet
 """.strip()
 

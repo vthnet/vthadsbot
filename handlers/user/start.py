@@ -58,79 +58,71 @@ Choose an option below.
 async def send_home(
     target,
     user,
-    edit: bool = False
+    edit: bool = False,
 ):
 
-    keyboard = await home_keyboard(
-        user.telegram_id
-    )
+    keyboard = await home_keyboard(user.telegram_id)
 
     setting = home_get("home")
 
     if setting is None:
-
         db = await BotSettingRepository.get("home")
 
         if db:
-
             setting = {
                 "text": db.text,
                 "media_type": db.media_type,
                 "file_id": db.file_id,
             }
-
             home_set("home", setting)
 
     if setting and setting.get("text"):
-
         text = (
             setting["text"]
             .replace("{name}", user.first_name)
             .replace("{username}", user.username or "None")
             .replace("{userid}", str(user.telegram_id))
         )
-
     else:
-
         text = await dashboard_text(user)
 
+    # PHOTO HOME
     if setting and setting.get("media_type") == "photo":
 
         if edit:
-
             try:
-                await target.delete()
-            except:
-                pass
-
-            await target.answer_photo(
-                setting["file_id"],
-                caption=text,
-                reply_markup=keyboard
-            )
+                await target.message.edit_caption(
+                    caption=text,
+                    reply_markup=keyboard,
+                )
+            except Exception:
+                await target.message.answer_photo(
+                    photo=setting["file_id"],
+                    caption=text,
+                    reply_markup=keyboard,
+                )
 
         else:
-
             await target.answer_photo(
-                setting["file_id"],
+                photo=setting["file_id"],
                 caption=text,
-                reply_markup=keyboard
+                reply_markup=keyboard,
             )
 
+    # TEXT HOME
     else:
 
         if edit:
-
-            await target.edit_text(
+            await smart_edit(
+                target,
                 text,
-                reply_markup=keyboard
+                keyboard,
             )
 
         else:
-
             await target.answer(
                 text,
-                reply_markup=keyboard
+                reply_markup=keyboard,
             )
 
 @router.message(CommandStart())
@@ -254,10 +246,10 @@ async def home_callback(
     timer = time.perf_counter()
 
     await send_home(
-        callback.message,
-        user,
-        edit=True
-    )
+    callback,
+    user,
+    edit=True,
+)
 
     print(f"Send Home: {time.perf_counter() - timer:.3f}s")
     print(f"HOME TOTAL: {time.perf_counter() - total_timer:.3f}s")

@@ -68,13 +68,13 @@ change its interval.
         callback,
         """
 ⏱ <b>Custom Rotation Interval</b>
--------------------------
+--------------------------------------------------
 •Send your new interval.
 Examples: 5m ,30m ,2h ,12h ,1d
 
 •Minimum :5 Minutes
 •Maximum :30 Days
--------------------------
+--------------------------------------------------
 """,
         back_keyboard()
     )
@@ -157,9 +157,9 @@ async def save_interval(
     await message.answer(
         f"""
 ✅ <b>Interval Updated</b>
-━━━━━━━━━━━━━━━━━━━━
+--------------------------------------------------
 ⏱ New Interval : <b>{interval}</b>
-━━━━━━━━━━━━━━━━━━━━
+--------------------------------------------------
 Applied to : <b>{updated}</b>
 
 running account(s).

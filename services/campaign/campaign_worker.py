@@ -152,7 +152,13 @@ async def process_campaign(
             campaign.completed_loops < loop_limit
 
         ):
-            await session.refresh(campaign)
+            campaign = await session.get(
+               Campaign,
+               campaign.id
+            )
+
+            if campaign is None:
+                break
 
             if campaign.paused:
 
@@ -172,7 +178,13 @@ async def process_campaign(
 
             for target in targets:
 
-                await session.refresh(campaign)
+                campaign = await session.get(
+                     Campaign,
+                     campaign.id
+           )
+
+                if campaign is None:
+                  break
 
                 if not campaign.running:
                     break
@@ -338,8 +350,14 @@ async def process_campaign(
                 f"⏳ Waiting {delay_text} before next loop..."
             )
 
-            await session.refresh(campaign)
+            campaign = await session.get(
+                Campaign,
+                campaign.id
+            )
 
+            if campaign is None:
+              break
+ 
             if not campaign.running:
                 break
 
@@ -352,65 +370,67 @@ async def process_campaign(
 
 
         campaign.finished_at = datetime.utcnow()
-        campaign.current_target = "Completed"
-        campaign.running = False
-        campaign.paused = False
-        campaign.completed = True
+        if campaign.current_target != "Manually Finished":
 
-        await session.commit()
+            campaign.finished_at = datetime.utcnow()
+            campaign.current_target = "Completed"
+            campaign.running = False
+            campaign.paused = False
+            campaign.completed = True
 
-        runtime = campaign.finished_at - campaign.started_at
+            await session.commit()
 
+            runtime = campaign.finished_at - campaign.started_at
 
-        await bot.send_message(
-            owner_id,
-
-
-
-            f"""
+            await bot.send_message(
+                owner_id,
+                f"""
 🎉 <b>Campaign Completed</b>
-
+--------------------------------------------------
 🆔 <code>{campaign.id}</code>
-
 📤 Sent : {campaign.total_sent}
 ❌ Failed : {campaign.failed_sent}
 👥 Groups : {len(targets)}
 🔁 Loops : {"∞" if campaign.infinite else campaign.completed_loops}
 ⏱ Runtime : {str(runtime).split(".")[0]}
-
+--------------------------------------------------
 ✅ Campaign Finished Successfully.
 """
-        )
+            )
 
-        print("=" * 50)
-
-        print(
-            f"✅ Campaign #{campaign.id} Completed"
-        )
-
-        print(
-            f"📤 Total Sent : {sent_count}"
-        )
-
-        print(
-            f"❌ Total Failed : {failed_count}"
-        )
-
-        print("=" * 50)
-
+            print("=" * 50)
+            print(f"✅ Campaign #{campaign.id} Completed")
+            print(f"📤 Total Sent : {sent_count}")
+            print(f"❌ Total Failed : {failed_count}")
+            print("=" * 50)
     except Exception as e:
 
+    
         print(
-            f"❌ Campaign Error #{campaign.id}: {e}"
-        )
+                f"❌ Campaign Error: {e}"
+         )
+    
 
-        campaign.finished_at = datetime.utcnow()
-        campaign.current_target = "Error"
-        campaign.running = False
-        campaign.paused = False
-        campaign.completed = True
+        try:
 
-        await session.commit()
+            campaign = await session.get(
+                 Campaign,
+                 campaign.id
+          )
+
+            if campaign:
+
+               campaign.finished_at = datetime.utcnow()
+               campaign.current_target = "Error"
+               campaign.running = False
+               campaign.paused = False
+               campaign.completed = True
+
+               await session.commit()
+
+        except Exception:
+           pass
+
 
     finally:
 

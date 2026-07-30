@@ -20,14 +20,8 @@ async def wallet(callback: CallbackQuery):
         f"""
 💰 VTH WALLET
 -------------------------
-💵 Balance :₹{balance}
-
-🎁 Referral Earnings :₹{referral}
+C O M I N G  S O O N 
 -------------------------
-💳 Deposit funds from the
-Wallet section anytime.
-
-🚀 Powered by VTH Network
 """,
         show_alert=True
     )

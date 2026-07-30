@@ -37,14 +37,14 @@ async def enable_bio(callback: CallbackQuery):
             callback,
             f"""
 ⚠ <b>Minimum 2 Bios Required</b>
--------------------------
+--------------------------------------------------
 You currently have :<b>{len(bios)}</b> saved bio(s).
 
 •Auto Bio Rotation requires
 at least <b>2 bios</b>.
 •Please add another bio
 to continue.
--------------------------
+--------------------------------------------------
 """,
             minimum_bio_keyboard()
         )

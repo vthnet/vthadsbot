@@ -20,37 +20,27 @@ async def select_bio(
     callback: CallbackQuery,
     state: FSMContext
 ):
+    await callback.answer(cache_time=1)
 
-    bio_id = int(
-        callback.data.split("_")[2]
-    )
+    bio_id = int(callback.data.split("_")[2])
 
     data = await state.get_data()
 
-    selected = data.get(
-        "selected_bios",
-        []
+    selected = list(
+        data.get("selected_bios", [])
     )
 
     if bio_id in selected:
-
         selected.remove(bio_id)
-
     else:
-
         if len(selected) >= 5:
-
             await callback.answer(
-                """
-Maximum 5 bios allowed.
-""",
+                "Maximum 5 bios allowed.",
                 show_alert=True
             )
             return
 
-        selected.append(
-            bio_id
-        )
+        selected.append(bio_id)
 
     await state.update_data(
         selected_bios=selected
@@ -67,9 +57,9 @@ Maximum 5 bios allowed.
     text = f"""
 📝 <b>Select Bios</b>
 -------------------------
-•Selected :<b>{len(selected)} / 5</b>
+• Selected : <b>{len(selected)} / 5</b>
 
-•Minimum Required :<b>2</b>
+• Minimum Required : <b>2</b>
 -------------------------
 """
 
@@ -82,23 +72,24 @@ Maximum 5 bios allowed.
         if len(preview) > 35:
             preview = preview[:35] + "..."
 
-        mark = "✅" if bio.id in selected else "☑"
-
         buttons.append(
             (
-                f"{mark} {preview}",
+                f'{"✅" if bio.id in selected else "☑"} {preview}',
                 f"bio_select_{bio.id}"
             )
         )
 
-    await smart_edit(
-        callback,
-        text,
-        continue_keyboard(
-            buttons,
-            len(selected)
+    try:
+        await smart_edit(
+            callback,
+            text,
+            continue_keyboard(
+                buttons,
+                len(selected)
+            )
         )
-    )
+    except Exception:
+        pass
 
 
 @router.callback_query(

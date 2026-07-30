@@ -13,7 +13,7 @@ from states.support import SupportState
 from config import config
 from handlers.user.start import send_home
 from database.repository.user_repo import UserRepository
-
+from utils.smart_edit import smart_edit
 router = Router()
 
 
@@ -34,13 +34,14 @@ async def support(callback: CallbackQuery):
 
     kb.adjust(1)
 
-    await callback.message.edit_text(
-        """
+    await smart_edit(
+    callback,
+    """
 🆘 <b>VTH SUPPORT</b>
 --------------------------
 • Thank you for choosing <b>VTH Ads Bot</b>. ❤️
 • If you experience any bug, payment issue, campaign issue, or have any suggestion, please use the <b>Report Problem</b> button below.
-• For direct support:@vthnetsupport
+• For direct support: @vthnetsupport
 --------------------------
 ⚠ <b>Note</b>
 
@@ -48,8 +49,8 @@ async def support(callback: CallbackQuery):
 
 We highly recommend using <b>Report Problem</b>. Our team will review your request and contact you as soon as possible.
 """,
-        reply_markup=kb.as_markup()
-    )
+    kb.as_markup(),
+)
 
     await callback.answer()
 
@@ -64,14 +65,15 @@ async def report_problem(
         SupportState.waiting_issue
     )
 
-    await callback.message.edit_text(
-        """
+    await smart_edit(
+    callback,
+    """
 📝 <b>Describe Your Issue</b>
---------------------------
+---------------------------------------------------
 • Please explain your issue in one paragraph.
 • The more details you provide, the easier it will be for our support team to help you.
-"""
-    )
+""",
+)
 
     await callback.answer()
 

@@ -62,14 +62,9 @@ async def add_account(
         callback,
         """
 📱 <b>Add Telegram Account</b>
-
-━━━━━━━━━━━━━━━━━━━━
-
-Send your phone number.
-
-Example
-
-<code>+919876543210</code>
+--------------------------------------------------
+• Send your phone number.
+• Example : <code>+919876543210</code>
 """,
         await back_keyboard(
             callback.from_user.id
@@ -98,9 +93,7 @@ async def get_phone(
         message_id=data["flow_message_id"],
         text="""
 ⏳ <b>Connecting to Telegram...</b>
-
-━━━━━━━━━━━━━━━━━━━━
-
+--------------------------------------------------
 Requesting OTP from Telegram.
 
 Please wait...
@@ -127,9 +120,7 @@ Please wait...
         message_id=data["flow_message_id"],
         text="""
 📨 <b>OTP Sent Successfully</b>
-
-━━━━━━━━━━━━━━━━━━━━
-
+--------------------------------------------------
 Please enter the verification
 code received on Telegram.
 """
@@ -151,9 +142,7 @@ async def get_code(
         message_id=data["flow_message_id"],
         text="""
 ⏳ <b>Verifying OTP...</b>
-
-━━━━━━━━━━━━━━━━━━━━
-
+--------------------------------------------------
 Please wait...
 """
     )
@@ -171,9 +160,7 @@ Please wait...
             message_id=data["flow_message_id"],
             text="""
 ❌ <b>Wrong OTP</b>
-
-━━━━━━━━━━━━━━━━━━━━
-
+--------------------------------------------------
 The verification code is incorrect.
 
 Please enter the correct OTP.
@@ -193,9 +180,7 @@ Please enter the correct OTP.
             message_id=data["flow_message_id"],
             text="""
 🔐 <b>Two-Step Verification</b>
-
-━━━━━━━━━━━━━━━━━━━━
-
+--------------------------------------------------
 Your Telegram account
 has Two-Step Verification.
 
@@ -227,9 +212,7 @@ async def get_password(
         message_id=data["flow_message_id"],
         text="""
 ⏳ <b>Logging In...</b>
-
-━━━━━━━━━━━━━━━━━━━━
-
+--------------------------------------------------
 Verifying your password...
 
 Please wait...
@@ -299,17 +282,11 @@ async def save_account(
         message_id=data["flow_message_id"],
         text=f"""
 ✅ <b>Telegram Account Added Successfully</b>
+--------------------------------------------------
+👤 Account Name :<b>{result["user"].first_name}</b>
 
-━━━━━━━━━━━━━━━━━━━━
-
-👤 Account Name
-<b>{result["user"].first_name}</b>
-
-📱 Phone Number
-<code>{result["user"].phone_number}</code>
-
-━━━━━━━━━━━━━━━━━━━━
-
+📱 Phone Number :<code>{result["user"].phone_number}</code>
+--------------------------------------------------
 🎉 Your Telegram account has been
 added successfully.
 

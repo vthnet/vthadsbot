@@ -130,25 +130,35 @@ class CampaignRepository:
 
     @staticmethod
     async def update_status(
-        campaign_id: int,
-        running: bool
-    ):
+      campaign_id: int,
+      running: bool,
+):
 
-        async with SessionLocal() as session:
+     async with SessionLocal() as session:
 
-            campaign = await session.get(
-                Campaign,
-                campaign_id
-            )
+        campaign = await session.get(
+            Campaign,
+            campaign_id,
+        )
 
-            if campaign:
+        if not campaign:
+            return
 
-                campaign.running = running
+        campaign.running = running
 
-                if running:
-                    campaign.paused = False
+        if running:
+            campaign.paused = False
+            campaign.completed = False
+            campaign.finished_at = None
 
-                await session.commit()
+        else:
+            campaign.paused = False
+            campaign.current_target = "Stopped"
+
+        await session.commit()
+        await session.refresh(campaign)
+
+        return campaign
 
 
     @staticmethod
@@ -209,21 +219,6 @@ class CampaignRepository:
 
             await session.commit()
 
-
-
-
-        async with SessionLocal() as session:
-
-            campaign = await session.get(
-                Campaign,
-                campaign_id
-            )
-
-            if campaign:
-
-                campaign.repeat_delay = delay
-
-                await session.commit()
 
     @staticmethod
     async def update_repeat_delay(

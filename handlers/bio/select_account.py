@@ -92,10 +92,10 @@ want to configure it again.
         callback,
         """
 📝 <b>Select Bios</b>
--------------------------
+--------------------------------------------------
 •Select at least :<b>2 Bios</b>.
 •Maximum allowed :<b>5 Bios</b>.
--------------------------
+--------------------------------------------------
 """,
         kb.as_markup()
     )

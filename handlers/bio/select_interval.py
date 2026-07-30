@@ -120,13 +120,13 @@ async def enable_rotation(
         callback,
         f"""
 ✅ <b>Auto Bio Rotation Enabled</b>
--------------------------
+--------------------------------------------------
 🟢 Status :<b>Enabled</b>
 
 📝 Selected Bios :<b>{len(bios)}</b>
 
 ⏰ Interval :<b>{interval_text}</b>
--------------------------
+--------------------------------------------------
 ✅ First bio has been
 applied immediately.
 

@@ -51,14 +51,11 @@ Checking all Telegram accounts.
             callback,
             """
 📱 <b>My Accounts</b>
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-No Telegram accounts found.
+--------------------------------------------------
+•No Telegram accounts found.
 
 Click <b>➕ Add Account</b> to get started.
-
-━━━━━━━━━━━━━━━━━━━━━━
+--------------------------------------------------
 """,
             None
         )
@@ -67,7 +64,7 @@ Click <b>➕ Add Account</b> to get started.
     active = 0
     text = (
         "📱 <b>My Telegram Accounts</b>\n"
-        "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+        "--------------------------------------------------\n\n"
     )
 
     for acc in accounts:
@@ -95,7 +92,7 @@ Click <b>➕ Add Account</b> to get started.
         )
 
     text += (
-        "━━━━━━━━━━━━━━━━━━━━━━\n"
+        "--------------------------------------------------\n"
         f"📊 Total Accounts : <b>{len(accounts)}</b>\n"
         f"🟢 Active : <b>{active}</b>\n"
         f"🔴 Expired : <b>{len(accounts)-active}</b>"
@@ -142,19 +139,13 @@ async def account_details(callback: CallbackQuery):
         callback,
         f"""
 👤 <b>{account.account_name}</b>
+--------------------------------------------------
+📱 Phone :<code>{account.phone}</code>
 
-━━━━━━━━━━━━━━━━━━━━━━
+📊 Status :{"🟢 Active" if status else "🔴 Session Expired"}
 
-📱 Phone
-<code>{account.phone}</code>
-
-📊 Status
-{"🟢 Active" if status else "🔴 Session Expired"}
-
-🆔 Account ID
-<code>{account.id}</code>
-
-━━━━━━━━━━━━━━━━━━━━━━
+🆔 Account ID :<code>{account.id}</code>
+--------------------------------------------------
 """,
         account_details_keyboard(
             account.id

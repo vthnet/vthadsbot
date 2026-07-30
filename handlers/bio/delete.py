@@ -63,13 +63,13 @@ Please add a bio first.
     await callback.message.edit_text(
         """
 🗑 <b>Select Bio To Delete</b>
--------------------------
+--------------------------------------------------
 •Select the bio you want
 to permanently remove.
 
 •This action cannot
 be undone.
--------------------------
+--------------------------------------------------
 """,
         reply_markup=kb.as_markup()
     )

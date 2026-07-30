@@ -1,15 +1,37 @@
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+
+
 def campaigns_keyboard(accounts):
 
     kb = InlineKeyboardBuilder()
 
+    free_accounts = 0
+
     for acc in accounts:
-        kb.button(
-            text=f"📱 {acc.account_name}",
-            callback_data=f"campaign_account_{acc.id}"
-        )
+
+        if getattr(acc, "running_campaign", False):
+
+            kb.button(
+                text=f"🔒 {acc.account_name} • Running",
+                callback_data=f"campaign_busy_{acc.id}"
+            )
+
+        else:
+
+            free_accounts += 1
+
+            kb.button(
+                text=f"📱 {acc.account_name}",
+                callback_data=f"campaign_account_{acc.id}"
+            )
+
+    kb.button(
+        text="➕ Add Telegram Account",
+        callback_data="add_account"
+    )
 
     kb.button(
         text="🏠 Home",
@@ -63,7 +85,7 @@ def campaign_manage_keyboard(
 
         kb.button(
             text="▶ Resume",
-            callback_data=f"pause_campaign_{campaign_id}"
+            callback_data=f"resume_campaign_{campaign_id}"
         )
 
         kb.button(
@@ -111,7 +133,7 @@ def campaign_manage_keyboard(
     )
 
     kb.button(
-        text="🗑 Delete",
+        text="🗑 Remove campaign",
         callback_data=f"delete_campaign_{campaign_id}"
     )
 

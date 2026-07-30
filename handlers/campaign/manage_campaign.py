@@ -88,7 +88,10 @@ async def live_dashboard(
 
         if campaign.completed:
 
-           status = "✅ Finished"
+          if campaign.current_target == "Manually Finished":
+             status = "🛑 Manually Finished"
+          else:
+             status = "✅ Finished"
 
         elif campaign.paused:
 
@@ -118,18 +121,18 @@ async def live_dashboard(
 
 f""" 
 🚀 <b>Campaign Dashboard</b>
--------------------------
+--------------------------------------------------
 🆔 Campaign ID :<code>{campaign.id}</code>
 🚦 Status :<b>{status}</b>
--------------------------
+--------------------------------------------------
 📤 Messages Sent :<b>{campaign.total_sent}</b>
 ❌ Failed :<b>{campaign.failed_sent}</b>
 🎯 Current Group :<b>{campaign.current_target or "Waiting..."}</b>
 👥 Progress :<b>{loop_text}</b>
--------------------------
+--------------------------------------------------
 ⚡ Send Delay :<b>{campaign.send_delay} Seconds</b>
 🔄 Repeat Delay :<b>{campaign.repeat_delay} Seconds</b>
--------------------------
+--------------------------------------------------
 🕒 Started :<b>{format_datetime(campaign.started_at)}</b>
 ⌛ Runtime :<b>{format_runtime(campaign.started_at)}</b>
 🏁 Finished :<b>{format_datetime(campaign.finished_at)}</b>
@@ -138,7 +141,9 @@ f"""
 
 reply_markup=campaign_manage_keyboard(
     campaign.id,
-    campaign.running and not campaign.paused
+    running=campaign.running,
+    completed=campaign.completed,
+    paused=campaign.paused
 )
 
             )
@@ -309,8 +314,9 @@ async def stop_campaign(
 
             campaign.running = False
             campaign.paused = False
+            campaign.completed = True
             campaign.finished_at = datetime.utcnow()
-            campaign.current_target = None
+            campaign.current_target = "Manually Finished"
 
             await session.commit()
 
@@ -326,15 +332,43 @@ async def stop_campaign(
         task.cancel()
 
     await callback.answer(
-        await callback.answer(
-    "🛑 Campaign Stopped Successfully"
-)
+        "🛑 Campaign Stopped Successfully",
+        show_alert=True
     )
 
-    await manage_campaign(
-        callback
-    )
+    campaign = await get_campaign(campaign_id)
 
+    try:
+
+        await callback.message.edit_text(
+            f"""
+🚀 <b>Campaign Dashboard</b>
+--------------------------------------------------
+🆔 Campaign ID : <code>{campaign.id}</code>
+🚦 Status : <b>🛑 Manually Finished</b>
+--------------------------------------------------
+📤 Messages Sent : <b>{campaign.total_sent}</b>
+❌ Failed : <b>{campaign.failed_sent}</b>
+🎯 Current Group : <b>Manually Finished</b>
+👥 Progress : <b>{"♾ Infinite" if campaign.infinite else f"{campaign.completed_loops}/{campaign.loop_count}"}</b>
+--------------------------------------------------
+⚡ Send Delay : <b>{campaign.send_delay} Seconds</b>
+🔄 Repeat Delay : <b>{campaign.repeat_delay} Seconds</b>
+--------------------------------------------------
+🕒 Started : <b>{format_datetime(campaign.started_at)}</b>
+⌛ Runtime : <b>{format_runtime(campaign.started_at)}</b>
+🏁 Finished : <b>{format_datetime(campaign.finished_at)}</b>
+""",
+            reply_markup=campaign_manage_keyboard(
+                campaign.id,
+                running=False,
+                completed=True,
+                paused=False
+            )
+        )
+
+    except TelegramBadRequest:
+        pass
 
 
 @router.callback_query(
@@ -408,14 +442,13 @@ async def delete_campaign(
 
             await session.commit()
 
-    await callback.answer(
-        "✅ Campaign Deleted Successfully",
-        show_alert=True
-    )
-
-    # Return user to My Campaigns page
+    # Return user to My Campaigns page immediately
     from handlers.campaign.my_campaigns import my_campaigns
 
-    callback.data = "my_campaigns"
+    from handlers.campaign.my_campaigns import my_campaigns
+
+    await callback.answer(
+    "✅ Campaign Deleted Successfully"
+)
 
     await my_campaigns(callback)

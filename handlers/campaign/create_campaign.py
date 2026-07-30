@@ -11,6 +11,9 @@ from database.repository.account_repo import AccountRepository
 from database.repository.campaign_repo import CampaignRepository
 from database.repository.target_repo import TargetRepository
 from utils.progress import campaign_progress
+from database.session import SessionLocal
+from database.models.campaign import Campaign
+from sqlalchemy import select
 
 from keyboards.campaign import (
     campaigns_keyboard,
@@ -159,38 +162,55 @@ This usually takes 1–3 seconds.
             callback,
             """
 ❌ <b>No Active Account</b>
--------------------------
+--------------------------------------------------
 • No Telegram account
 has been added yet.
 
 • Please add a Telegram
 account to continue.
--------------------------
+--------------------------------------------------
 """,
             no_account_keyboard()
         )
-
         return
 
     valid_accounts = []
+    busy_accounts = []
 
-    for account in accounts:
+    async with SessionLocal() as session:
 
-        status = await check_session(
-            account.session_string
-        )
+        for account in accounts:
 
-        await AccountRepository.update_status(
-            account.id,
-            status
-        )
+            status = await check_session(
+                account.session_string
+            )
 
-        if status:
+            await AccountRepository.update_status(
+                account.id,
+                status
+            )
 
-            valid_accounts.append(account)
+            if not status:
+                continue
 
-    # No active account found
-    if not valid_accounts:
+            result = await session.execute(
+                select(Campaign).where(
+                    Campaign.account_id == account.id,
+                    Campaign.running.is_(True)
+                )
+            )
+
+            running = result.scalar_one_or_none()
+
+            if running:
+                account.running_campaign = True
+                busy_accounts.append(account)
+            else:
+                account.running_campaign = False
+                valid_accounts.append(account)
+
+    # No active Telegram sessions
+    if not valid_accounts and not busy_accounts:
 
         await smart_edit(
             callback,
@@ -211,32 +231,75 @@ account and add a new one.
 """,
             no_account_keyboard()
         )
-
         return
 
-    # Show active accounts
+    # =====================================
+    # ALL ACCOUNTS ARE BUSY
+    # =====================================
+
+    if not valid_accounts:
+
+        kb = InlineKeyboardBuilder()
+
+        kb.button(
+            text="➕ Add Telegram Account",
+            callback_data="add_account"
+        )
+
+        kb.button(
+            text="📊 My Campaigns",
+            callback_data="my_campaigns"
+        )
+
+        kb.button(
+            text="🏠 Home",
+            callback_data="home"
+        )
+
+        kb.adjust(1)
+
+        await callback.message.edit_text(
+            """
+⚠️ <b>All Accounts Busy</b>
+-------------------------
+All your Telegram accounts
+are already running campaigns.
+
+Stop an existing campaign
+or add another Telegram
+account to continue.
+-------------------------
+""",
+            reply_markup=kb.as_markup()
+        )
+
+        await callback.answer()
+        return
+
+    # =====================================
+    # SHOW ACCOUNT LIST
+    # =====================================
+
     from utils.progress import campaign_progress
 
     await smart_edit(
-    callback,
-    f"""
+        callback,
+        f"""
 📢 <b>Create Campaign</b>
--------------------------
+--------------------------------------------------
 <b>Step 1 / 5</b>
 {campaign_progress(1)}
--------------------------
+--------------------------------------------------
 👤 <b>Select Telegram Account</b>
 
 • Choose the Telegram account
 you want to use for this
 campaign.
-
 """,
-    campaigns_keyboard(
-        valid_accounts
+        campaigns_keyboard(
+            valid_accounts + busy_accounts
+        )
     )
-)
-
 # ==============================
 # SELECT ACCOUNT
 # ==============================
@@ -267,10 +330,10 @@ async def select_account(
     await callback.message.edit_text(
     f"""
 📢 <b>Create Campaign</b>
--------------------------
+--------------------------------------------------
 <b>Step 2 / 5</b>
 {campaign_progress(2)}
--------------------------
+--------------------------------------------------
 🎯 <b>Select Campaign Target</b>
 
 • Choose where you want to send your campaign.
@@ -282,7 +345,20 @@ async def select_account(
 
     await callback.answer()
 
+@router.callback_query(F.data.startswith("campaign_busy_"))
+async def campaign_busy(callback: CallbackQuery):
 
+    await callback.answer(
+        """
+⚠️ Account Already In Use
+
+•This Telegram account is already
+running an active campaign.
+•Stop the current campaign first
+or use another Telegram account.
+""",
+        show_alert=True
+    )
 
 
 
@@ -363,10 +439,10 @@ async def all_groups(
     callback,
     f"""
 📢 <b>Create Campaign</b>
--------------------------
+--------------------------------------------------
 <b>Step 3 / 5</b>
 {campaign_progress(3)}
--------------------------
+--------------------------------------------------
 📂 <b>Select Groups</b>
 
 • Choose one or more groups for this campaign.

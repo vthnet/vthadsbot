@@ -49,10 +49,10 @@ async def my_campaigns(callback: CallbackQuery):
             callback,
             """
 📂 <b>My Campaigns</b>
--------------------------
+--------------------------------------------------
 •🤔 No campaigns found.
 •Create your first campaign to start sending messages.
--------------------------
+--------------------------------------------------
 🟢 Ready to Create
 """,
             campaign_list_keyboard([])
@@ -89,17 +89,17 @@ async def my_campaigns(callback: CallbackQuery):
         callback,
         f"""
 📢 <b>My Campaigns</b>
--------------------------
-•📦 Total Campaigns : <b>{total}</b>
+--------------------------------------------------
+📦 Total Campaigns : <b>{total}</b>
 
-•🟢 Running : <b>{running}</b>
+🟢 Running : <b>{running}</b>
 
-•⏸ Paused : <b>{paused}</b>
+⏸ Paused : <b>{paused}</b>
 
-•✅ Completed : <b>{finished}</b>
+✅ Completed : <b>{finished}</b>
 
-•🔴 Stopped : <b>{stopped}</b>
--------------------------
+🔴 Stopped : <b>{stopped}</b>
+--------------------------------------------------
 Select a campaign below.
 """,
         campaign_list_keyboard(campaigns)
@@ -145,23 +145,23 @@ async def open_campaign(callback: CallbackQuery):
         callback,
         f"""
 📢 <b>Campaign Details</b>
--------------------------
-•🆔 ID :<code>{campaign.id}</code>
+--------------------------------------------------
+<blockquote>🆔 ID :<code>{campaign.id}</code>
 
-•📨 Message :{campaign.post_data}
+📨 Message :{campaign.post_data}
 
-•👥 Targets :<b>{len(targets)}</b>
+👥 Targets :<b>{len(targets)}</b>
 
-•📊 Messages Sent :<b>{campaign.total_sent}</b>
+📊 Messages Sent :<b>{campaign.total_sent}</b>
 
-•⏱ Delay Between Groups :<b>{campaign.send_delay} sec</b>
+⏱ Delay Between Groups :<b>{campaign.send_delay} sec</b>
 
-•🔁 Loop Delay :<b>{campaign.repeat_delay} sec</b>
+🔁 Loop Delay :<b>{campaign.repeat_delay} sec</b>
 
-•📅 Created :<code>{campaign.created_at.strftime("%d-%m-%Y %H:%M")}</code>
+📅 Created :<code>{campaign.created_at.strftime("%d-%m-%Y %H:%M")}</code>
 
-•🚦 Status :{status}
--------------------------
+🚦 Status :{status}</blockquote>
+--------------------------------------------------
 """,
         campaign_manage_keyboard(
             campaign.id,

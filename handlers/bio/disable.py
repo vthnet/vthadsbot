@@ -66,11 +66,11 @@ Auto Bio Rotation.
         callback,
         f"""
 ⛔ <b>Disable Auto Bio Rotation</b>
--------------------------
+--------------------------------------------------
 
 Running Accounts :<b>{total}</b>
 
--------------------------
+--------------------------------------------------
 Select an account.
 """,
         kb.as_markup()
