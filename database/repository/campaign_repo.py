@@ -12,7 +12,6 @@ class CampaignRepository:
     async def create(
         account_id: int,
         post_data: str,
-        media_path: str = None,
     
     ):
 
@@ -22,11 +21,7 @@ class CampaignRepository:
                 account_id=account_id,
                 title="New Campaign",
                 post_data=post_data,
-                media_path=media_path,
                 send_delay=5,
-                repeat_delay=86400,
-                total_sent=0,
-                running=False
             )
 
             session.add(campaign)

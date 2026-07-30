@@ -8,5 +8,5 @@ async def loading(
 
     try:
         await callback.answer(text)
-    except:
+    except Exception:
         pass

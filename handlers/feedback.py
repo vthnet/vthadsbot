@@ -114,8 +114,8 @@ async def rating_selected(
         """
 ✍ <b>Write your Feedback</b>
 -------------------------
-Report bugs, suggest new features,
-or share your experience with VTH Ads Bot.
+You can send text, screenshots, photos,
+videos, documents, or any other message.
 """
     )
 
@@ -135,14 +135,20 @@ async def receive_feedback(
         f"""
 💡 <b>New Feedback</b>
 -------------------------
-⭐ Rating :{rating}
--------------------------
-👤 User :{message.from_user.first_name}
-🆔 User ID :<code>{message.from_user.id}</code>
-📎 Username :@{message.from_user.username or "None"}
--------------------------
-📝 Feedback :{message.text}
+⭐ Rating : {rating}
+
+👤 User : {message.from_user.first_name}
+🆔 User ID : <code>{message.from_user.id}</code>
+📎 Username : @{message.from_user.username or "None"}
+
+⬇️ Feedback attached below.
 """
+    )
+
+    await message.bot.copy_message(
+        chat_id=config.ADMINS[0],
+        from_chat_id=message.chat.id,
+        message_id=message.message_id,
     )
 
     await message.answer(

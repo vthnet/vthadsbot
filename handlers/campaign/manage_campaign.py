@@ -11,7 +11,7 @@ from database.session import SessionLocal
 from database.models.campaign import Campaign
 
 from keyboards.campaign import campaign_manage_keyboard
-
+from utils.smart_edit import smart_edit
 router = Router()
 
 dashboard_tasks = {}
@@ -340,7 +340,8 @@ async def stop_campaign(
 
     try:
 
-        await callback.message.edit_text(
+        await smart_edit(
+    callback,
             f"""
 🚀 <b>Campaign Dashboard</b>
 --------------------------------------------------

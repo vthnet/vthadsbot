@@ -2,6 +2,8 @@ from aiogram import Router
 from aiogram.filters import Command
 from aiogram.types import Message
 
+from config import config
+
 router = Router()
 
 MAINTENANCE = False
@@ -14,6 +16,9 @@ def maintenance_enabled():
 @router.message(Command("maintenance"))
 async def maintenance(message: Message):
 
+    if message.from_user.id not in config.ADMINS:
+        return
+
     global MAINTENANCE
 
     args = message.text.split()
@@ -23,7 +28,6 @@ async def maintenance(message: Message):
         await message.answer(
             "Usage:\n/maintenance on\n/maintenance off"
         )
-
         return
 
     if args[1].lower() == "on":

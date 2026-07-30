@@ -47,19 +47,48 @@ Checking all Telegram accounts.
 
     if not accounts:
 
-        await smart_edit(
-            callback,
-            """
+     await callback.answer(
+        """
+❌ No Telegram Accounts Found
+
+Please add a Telegram account first.
+""",
+        show_alert=True
+    )
+
+    from aiogram.utils.keyboard import InlineKeyboardBuilder
+
+    kb = InlineKeyboardBuilder()
+
+    kb.button(
+        text="➕ Add Account",
+        callback_data="add_account"
+    )
+
+    kb.button(
+        text="🏠 Home",
+        callback_data="home"
+    )
+
+    kb.adjust(1)
+
+    await smart_edit(
+        callback,
+        """
 📱 <b>My Accounts</b>
---------------------------------------------------
-•No Telegram accounts found.
+━━━━━━━━━━━━━━━━━━━━━━
+❌ <b>No Telegram Accounts Found</b>
+
+You haven't added any Telegram
+accounts yet.
 
 Click <b>➕ Add Account</b> to get started.
---------------------------------------------------
+━━━━━━━━━━━━━━━━━━━━━━
 """,
-            None
-        )
-        return
+        kb.as_markup()
+    )
+
+    return
 
     active = 0
     text = (

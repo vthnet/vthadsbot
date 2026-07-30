@@ -24,7 +24,8 @@ async def process_campaign(
     campaign,
     session
 ):
-
+    campaign_id = campaign.id
+    
     if campaign.id in running_campaigns:
 
         print(
@@ -190,43 +191,23 @@ async def process_campaign(
                     break
 
                 if campaign.paused:
-                    break
+                   break
 
                 try:
-
-                    if campaign.media_path:
-
-                        await app.send_photo(
-
-                            chat_id=target.chat_id,
-
-                            photo=campaign.media_path,
-
-                            caption=campaign.post_data or ""
-
-                        )
-
-                    else:
-
-                        await app.send_message(
-
-                            chat_id=target.chat_id,
-
-                            text=campaign.post_data
-
-                        )
+                    await app.send_message(
+                        chat_id=target.chat_id,
+                        text=campaign.post_data or "",
+                    )
 
                     sent_count += 1
-
                     campaign.total_sent += 1
 
                     campaign.current_target = (
-
                         target.chat_title
-
                         or str(target.chat_id)
-
                     )
+
+                    await session.commit()
 
                     await session.commit()
 
@@ -404,19 +385,26 @@ async def process_campaign(
             print(f"❌ Total Failed : {failed_count}")
             print("=" * 50)
     except Exception as e:
-
+        
     
         print(
-                f"❌ Campaign Error: {e}"
-         )
+                f"❌ Campaign Error: {e}")
+
+        await session.rollback()
+
+        try:
+              await session.rollback()
+        except Exception:
+           pass
     
 
         try:
 
             campaign = await session.get(
-                 Campaign,
-                 campaign.id
-          )
+               Campaign,
+               campaign_id
+)
+          
 
             if campaign:
 
@@ -434,9 +422,11 @@ async def process_campaign(
 
     finally:
 
-        running_campaigns.discard(
-            campaign.id
-        )
+        try:
+           running_campaigns.discard(campaign_id)
+        except Exception:
+          pass
+
 
         if app:
 
@@ -464,17 +454,15 @@ async def run_single_campaign(
         campaign = result.scalar_one_or_none()
 
         if not campaign:
+           print(f"❌ Campaign {campaign_id} not found")
+           return
 
-            print(
-                f"❌ Campaign {campaign_id} not found"
-            )
-
-            return
+        campaign_id = campaign.id
 
         await process_campaign(
-            campaign,
-            session
-        )
+          campaign,
+          session
+)
 
 
 async def run_campaigns():

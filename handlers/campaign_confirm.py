@@ -7,7 +7,7 @@ from database.repository.campaign_repo import CampaignRepository
 from database.repository.target_repo import TargetRepository
 
 from services.campaign.campaign_worker import run_single_campaign
-
+from utils.smart_edit import smart_edit
 router = Router()
 
 
@@ -24,7 +24,6 @@ async def start_campaign(
     campaign = await CampaignRepository.create(
         account_id=data["account_id"],
         post_data=data["post_data"],
-        media_path=data["media_path"]
     )
 
     # Fixed delay between groups
@@ -122,8 +121,9 @@ async def start_campaign(
 
         delay_text = f"{delay // 3600} Hour(s)"
 
-    await callback.message.edit_text(
-        f"""
+    await smart_edit(
+    callback,
+    f"""
 ✅ <b>Campaign Started Successfully</b>
 -------------------------
 🆔 <b>Campaign ID</b> :<code>{campaign.id}</code>
@@ -140,7 +140,7 @@ async def start_campaign(
 -------------------------
 ⚠️ Keep this account online until the campaign finishes.
 """
-    )
+)
 
     await state.clear()
 
@@ -159,7 +159,8 @@ async def cancel_campaign(
 
     await state.clear()
 
-    await callback.message.edit_text(
+    await smart_edit(
+    callback,
         "❌ Campaign Cancelled."
     )
 

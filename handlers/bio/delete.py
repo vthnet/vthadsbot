@@ -12,6 +12,7 @@ from database.repository.bio_rotation_item_repo import (
 )
 
 from handlers.bio.menu import bio_home
+from utils.smart_edit import smart_edit
 
 router = Router()
 
@@ -60,7 +61,8 @@ Please add a bio first.
 
     kb.adjust(1)
 
-    await callback.message.edit_text(
+    await smart_edit(
+    callback,
         """
 🗑 <b>Select Bio To Delete</b>
 --------------------------------------------------

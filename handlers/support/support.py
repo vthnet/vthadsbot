@@ -11,9 +11,9 @@ from aiogram.fsm.context import FSMContext
 
 from states.support import SupportState
 from config import config
-from handlers.user.start import send_home
 from database.repository.user_repo import UserRepository
 from utils.smart_edit import smart_edit
+
 router = Router()
 
 
@@ -35,8 +35,8 @@ async def support(callback: CallbackQuery):
     kb.adjust(1)
 
     await smart_edit(
-    callback,
-    """
+        callback,
+        """
 🆘 <b>VTH SUPPORT</b>
 --------------------------
 • Thank you for choosing <b>VTH Ads Bot</b>. ❤️
@@ -49,8 +49,8 @@ async def support(callback: CallbackQuery):
 
 We highly recommend using <b>Report Problem</b>. Our team will review your request and contact you as soon as possible.
 """,
-    kb.as_markup(),
-)
+        kb.as_markup(),
+    )
 
     await callback.answer()
 
@@ -66,14 +66,25 @@ async def report_problem(
     )
 
     await smart_edit(
-    callback,
-    """
+        callback,
+        """
 📝 <b>Describe Your Issue</b>
----------------------------------------------------
-• Please explain your issue in one paragraph.
-• The more details you provide, the easier it will be for our support team to help you.
-""",
-)
+━━━━━━━━━━━━━━━━━━━━━━
+
+Please describe your issue.
+
+You may send:
+• Text
+• Photos
+• Videos
+• Documents
+• Screenshots
+"""
+    )
+
+    await state.update_data(
+        support_message_id=callback.message.message_id
+    )
 
     await callback.answer()
 
@@ -84,21 +95,31 @@ async def receive_issue(
     state: FSMContext
 ):
 
+    data = await state.get_data()
+
     await state.update_data(
-        issue=message.text
+        issue_message_id=message.message_id,
+        issue_chat_id=message.chat.id,
     )
 
     await state.set_state(
         SupportState.waiting_contact
     )
 
-    await message.answer(
-        """
-📬 <b>Contact Username</b>
--------------------------
-Please send the Telegram username where our support team can contact you.
+    await message.delete()
 
-Example:@yourusername
+    await message.bot.edit_message_text(
+        chat_id=message.chat.id,
+        message_id=data["support_message_id"],
+        text="""
+📬 <b>Contact Username</b>
+━━━━━━━━━━━━━━━━━━━━━━
+
+Please send the Telegram username
+where our support team can contact you.
+
+Example:
+@yourusername
 """
     )
 
@@ -109,35 +130,35 @@ async def receive_contact(
     state: FSMContext
 ):
 
-    if not message.text.startswith("@"):
+    if not message.text or not message.text.startswith("@"):
 
         await message.answer(
             """
-❌ Invalid Username
--------------------------
-•Please send a valid Telegram username.
- Example:@yourusername
+❌ <b>Invalid Username</b>
+
+Please send a valid Telegram username.
+
+Example:
+@yourusername
 """
         )
         return
 
     data = await state.get_data()
 
-    issue = data["issue"]
+    await message.delete()
 
     await message.bot.send_message(
         config.ADMINS[0],
         f"""
 🚨 <b>NEW SUPPORT REQUEST</b>
 -------------------------
-👤 <b>Name</b> :{message.from_user.first_name}
-🆔 <b>User ID</b> :<code>{message.from_user.id}</code>
-📎 <b>Telegram Username</b> :{message.from_user.username or "None"}
-📬 <b>Contact Username</b> :{message.text}
--------------------------
-📝 <b>Issue</b>
+👤 <b>Name</b> : {message.from_user.first_name}
+🆔 <b>User ID</b> : <code>{message.from_user.id}</code>
+📎 <b>Telegram Username</b> : @{message.from_user.username if message.from_user.username else 'None'}
+📬 <b>Contact Username</b> : {message.text}
 
-{issue}
+⬇️ Issue attached below.
 """,
         reply_markup=InlineKeyboardMarkup(
             inline_keyboard=[
@@ -151,33 +172,42 @@ async def receive_contact(
         )
     )
 
+    await message.bot.copy_message(
+        chat_id=config.ADMINS[0],
+        from_chat_id=data["issue_chat_id"],
+        message_id=data["issue_message_id"],
+    )
+
     await state.clear()
 
-    user = await UserRepository.get_user(
+    await UserRepository.get_user(
         message.from_user.id
     )
 
-    success = await message.answer(
-        """
-🎉 <b>Support Request Submitted!</b>
-<blockquote>• Thank you for choosing ❤️ <b>VTH Ads Bot</b>
-We truly appreciate you for using our services.
-↪ ✅ Your support request has been submitted successfully.
-↪ 📞 Our support team will contact you using the username you provided.
-↪ ⏳ Please allow some time for a response.</blockquote>
-      -------------------------
-      🚀 Powered by VTH Network
-"""
+    kb = InlineKeyboardBuilder()
+
+    kb.button(
+        text="🏠 Home",
+        callback_data="home"
     )
 
-    await asyncio.sleep(3)
+    await message.bot.edit_message_text(
+        chat_id=message.chat.id,
+        message_id=data["support_message_id"],
+        text="""
+✅ <b>Support Request Submitted</b>
+━━━━━━━━━━━━━━━━━━━━━━
 
-    try:
-        await success.delete()
-    except:
-        pass
+Your support request has been submitted successfully.
 
-    await send_home(
-        message,
-        user
+📞 Our support team will contact you
+using the username you provided.
+
+⏳ Please allow some time for a response.
+
+❤️ Thank you for choosing
+<b>VTH Ads Bot</b>.
+━━━━━━━━━━━━━━━━━━━━━━
+""",
+        reply_markup=kb.as_markup()
     )

@@ -1,8 +1,10 @@
 from aiogram import Router
 from aiogram.filters import Command
+from aiogram.types import Message
 
 from sqlalchemy import select, func
 
+from config import config
 from database.session import SessionLocal
 from database.models.user import User
 from database.models.account import Account
@@ -12,7 +14,10 @@ router = Router()
 
 
 @router.message(Command("status"))
-async def bot_status(message):
+async def bot_status(message: Message):
+
+    if message.from_user.id not in config.ADMINS:
+        return
 
     async with SessionLocal() as session:
 
@@ -22,13 +27,13 @@ async def bot_status(message):
 
         premium_users = await session.scalar(
             select(func.count(User.id)).where(
-                User.is_premium == True
+                User.is_premium.is_(True)
             )
         )
 
         banned_users = await session.scalar(
             select(func.count(User.id)).where(
-                User.is_banned == True
+                User.is_banned.is_(True)
             )
         )
 
@@ -38,7 +43,7 @@ async def bot_status(message):
 
         active_accounts = await session.scalar(
             select(func.count(Account.id)).where(
-                Account.active == True
+                Account.active.is_(True)
             )
         )
 
@@ -50,33 +55,33 @@ async def bot_status(message):
 
         running_campaigns = await session.scalar(
             select(func.count(Campaign.id)).where(
-                Campaign.running == True
+                Campaign.running.is_(True)
             )
         )
 
         paused_campaigns = await session.scalar(
             select(func.count(Campaign.id)).where(
-                Campaign.paused == True
+                Campaign.paused.is_(True)
             )
         )
 
         completed_campaigns = await session.scalar(
             select(func.count(Campaign.id)).where(
-                Campaign.completed == True
+                Campaign.completed.is_(True)
             )
         )
 
-        sent_result = await session.execute(
-            select(func.sum(Campaign.total_sent))
-        )
+        total_sent = (
+            await session.scalar(
+                select(func.sum(Campaign.total_sent))
+            )
+        ) or 0
 
-        total_sent = sent_result.scalar() or 0
-
-        failed_result = await session.execute(
-            select(func.sum(Campaign.failed_sent))
-        )
-
-        total_failed = failed_result.scalar() or 0
+        total_failed = (
+            await session.scalar(
+                select(func.sum(Campaign.failed_sent))
+            )
+        ) or 0
 
     await message.answer(
         f"""

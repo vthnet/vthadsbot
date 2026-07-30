@@ -116,7 +116,6 @@ class CampaignState(StatesGroup):
 
     waiting_target = State()
     waiting_group = State()
-    waiting_manual_group = State()
     waiting_post = State()
     waiting_loop = State()
     waiting_delay = State()
@@ -258,7 +257,8 @@ account and add a new one.
 
         kb.adjust(1)
 
-        await callback.message.edit_text(
+        await smart_edit(
+    callback,
             """
 ⚠️ <b>All Accounts Busy</b>
 -------------------------
@@ -327,7 +327,8 @@ async def select_account(
     )
 
 
-    await callback.message.edit_text(
+    await smart_edit(
+    callback,
     f"""
 📢 <b>Create Campaign</b>
 --------------------------------------------------
@@ -362,10 +363,6 @@ or use another Telegram account.
 
 
 
-# ==============================
-# ALL GROUPS
-# ==============================
-
 @router.callback_query(
     F.data == "target_all_groups"
 )
@@ -374,70 +371,58 @@ async def all_groups(
     state: FSMContext
 ):
 
-
     await callback.answer(
-    """
+        """
 ⏳ Fetching Groups...
-•Collecting all groups joined by this account.
-•This usually takes 2–5 seconds.
-""",
-    show_alert=True
-)
 
-    
+• Collecting all groups joined by this account.
+• This usually takes 2–5 seconds.
+""",
+        show_alert=True
+    )
 
     data = await state.get_data()
-
 
     account = await AccountRepository.get_account(
         data["account_id"]
     )
 
-
     if not account:
 
         await smart_edit(
-    callback,
-    "❌ Account not found."
-)
+            callback,
+            "❌ Account not found."
+        )
 
-        await callback.answer()
         return
-
-
 
     groups = await get_joined_groups(
         account.session_string
     )
 
-
     if not groups:
 
         await smart_edit(
-    callback,
-    "❌ No groups found."
-)
+            callback,
+            "❌ No groups found."
+        )
 
-        await callback.answer()
         return
-
-
 
     await state.update_data(
         target_type="all_groups",
         groups=groups,
-        selected_groups=[]
+        selected_groups=[],
+        group_message_id=callback.message.message_id
     )
-
 
     await state.set_state(
         CampaignState.waiting_group
     )
 
-
     await smart_edit(
-    callback,
-    f"""
+        callback,
+        f"""
 📢 <b>Create Campaign</b>
 --------------------------------------------------
 <b>Step 3 / 5</b>
@@ -447,216 +432,13 @@ async def all_groups(
 
 • Choose one or more groups for this campaign.
 """,
-    groups_keyboard(
-        groups,
-        []
-    )
-)
-
-
-    await callback.answer()
-
-# ==============================
-# MANUAL TARGET
-# ==============================
-
-@router.callback_query(
-    F.data == "target_manual"
-)
-async def manual_group(
-    callback: CallbackQuery,
-    state: FSMContext
-):
-
-    await state.update_data(
-        target_type="manual"
-    )
-
-    await state.set_state(
-        CampaignState.waiting_manual_group
-    )
-
-    await smart_edit(
-    callback,
-    "📨 Send the group username or ID.\n\n"
-    "Example:\n"
-    "@mygroup\n"
-    "-1001234567890"
-)
-
-    await callback.answer()
-
-
-@router.message(
-    CampaignState.waiting_manual_group
-)
-async def receive_manual_group(
-    message: Message,
-    state: FSMContext
-):
-
-    from pyrogram import Client
-    from config import config
-
-    data = await state.get_data()
-
-    account = await AccountRepository.get_account(
-        data["account_id"]
-    )
-
-    app = Client(
-        "manual_target",
-        api_id=config.API_ID,
-        api_hash=config.API_HASH,
-        session_string=account.session_string,
-        in_memory=True
-    )
-
-    valid_groups = []
-    invalid_groups = []
-
-    try:
-
-        await app.start()
-
-        dialogs = {}
-
-        async for dialog in app.get_dialogs():
-
-            chat = dialog.chat
-
-            dialogs[str(chat.id)] = {
-                "id": chat.id,
-                "title": chat.title,
-                "username": chat.username
-            }
-
-            if chat.username:
-
-                dialogs[
-                    "@" + chat.username.lower()
-                ] = {
-                    "id": chat.id,
-                    "title": chat.title,
-                    "username": chat.username
-                }
-
-        await app.stop()
-
-    except Exception as e:
-
-        try:
-            await app.stop()
-        except:
-            pass
-
-        print(e)
-
-        await message.answer(
-            "❌ Unable to fetch joined groups."
-        )
-
-        return
-
-
-    for group in message.text.split(","):
-
-        group = group.strip()
-
-        if not group:
-            continue
-
-        key = group.lower()
-
-        if key in dialogs:
-
-            valid_groups.append(
-                dialogs[key]
-            )
-
-        else:
-
-            invalid_groups.append(
-                group
-            )
-
-
-    if not valid_groups:
-
-        await message.answer(
-            "❌ None of the entered groups are joined with this account."
-        )
-
-        return
-
-
-    await state.update_data(
-        manual_groups=valid_groups
-    )
-
-    await state.set_state(
-        CampaignState.waiting_post
-    )
-
-    
-    text += "\n\n📝 Send your campaign message."
-
-    await message.answer(text)
-
-
-# ==============================
-# SELECT / UNSELECT GROUP
-# ==============================
-
-@router.callback_query(
-    F.data.startswith("select_group_")
-)
-async def select_group(
-    callback: CallbackQuery,
-    state: FSMContext
-):
-
-    group_id = int(
-        callback.data.split("_")[2]
-    )
-
-
-    data = await state.get_data()
-
-
-    selected = data.get(
-        "selected_groups",
-        []
-    )
-
-
-    if group_id in selected:
-
-        selected.remove(group_id)
-
-    else:
-
-        selected.append(group_id)
-
-
-
-    await state.update_data(
-        selected_groups=selected
-    )
-
-
-    await callback.message.edit_reply_markup(
-        reply_markup=groups_keyboard(
-            data.get("groups", []),
-            selected
+        groups_keyboard(
+            groups,
+            []
         )
     )
 
-
     await callback.answer()
-
-
-
 
 
 # ==============================
@@ -727,6 +509,39 @@ async def unselect_all_groups(
     await callback.answer("Selection cleared")
 
 
+
+@router.callback_query(
+    F.data.startswith("select_group_")
+)
+async def select_group(
+    callback: CallbackQuery,
+    state: FSMContext
+):
+    group_id = int(
+        callback.data.replace("select_group_", "")
+    )
+
+    data = await state.get_data()
+
+    selected = data.get("selected_groups", [])
+
+    if group_id in selected:
+        selected.remove(group_id)
+    else:
+        selected.append(group_id)
+
+    await state.update_data(
+        selected_groups=selected
+    )
+
+    await callback.message.edit_reply_markup(
+        reply_markup=groups_keyboard(
+            data["groups"],
+            selected
+        )
+    )
+
+    await callback.answer()
 
 
 
@@ -824,8 +639,8 @@ async def continue_groups(
         CampaignState.waiting_post
     )
 
-
     await smart_edit(
+    
     callback,
     f"""
 📢 <b>Create Campaign</b>
@@ -839,6 +654,8 @@ Supported:
 • Text only for now
 """
 )
+
+
     await state.update_data(
     post_message_id=callback.message.message_id
 )
@@ -852,47 +669,17 @@ Supported:
 # RECEIVE POST
 # ==============================
 
-@router.message(
-    CampaignState.waiting_post
-)
+@router.message(CampaignState.waiting_post)
 async def receive_post(
     message: Message,
     state: FSMContext
 ):
-
-    import os
-
-    media_path = None
-    post_data = ""
-
-    if message.photo:
-
-        photo = message.photo[-1]
-
-        post_data = message.caption or ""
-
-        os.makedirs(
-            "media/campaigns",
-            exist_oak=True
-        )
-
-        media_path = (
-            f"media/campaigns/{photo.file_unique_id}.jpg"
-        )
-
-        await message.bot.download(
-            photo.file_id,
-            destination=media_path
-        )
-
-    else:
-
-        post_data = message.text or ""
+    post_data = message.html_text or message.text or ""
 
     await state.update_data(
-        post_data=post_data,
-        media_path=media_path
+        post_data=post_data
     )
+
     data = await state.get_data()
 
     await state.set_state(
@@ -901,25 +688,22 @@ async def receive_post(
 
     await message.delete()
 
-    await message.bot.edit_message_text(
+    await message.bot.edit_message_caption(
     chat_id=message.chat.id,
     message_id=data["post_message_id"],
-    text=f"""
+    caption=f"""
 📢 <b>Create Campaign</b>
--------------------------
+--------------------------------------------------
 <b>Step 5 / 5</b>
 {campaign_progress(5)}
--------------------------
+--------------------------------------------------
 🔁 <b>Select Campaign Loop</b>
 
-Choose how many times
-this campaign should run.
+Choose how many times this campaign should run.
 """,
-    reply_markup=loop_keyboard(False)
+    reply_markup=loop_keyboard(False),
+    parse_mode="HTML"
 )
-
-
-
 
 
 
@@ -1016,7 +800,8 @@ async def select_loop(
 
     from keyboards.repeat_delay import repeat_delay_keyboard
 
-    await callback.message.edit_text(
+    await smart_edit(
+    callback,
         """
 ⏱ <b>Select Loop Interval</b>
 
@@ -1036,6 +821,10 @@ Choose wisely.
 """,
         reply_markup=repeat_delay_keyboard()
     )
+
+    await state.update_data(
+     post_message_id=callback.message.message_id
+)
 
     await callback.answer()
 
@@ -1078,7 +867,8 @@ only for Premium Members.
             CampaignState.waiting_custom_repeat
         )
 
-        await callback.message.edit_text(
+        await smart_edit(
+    callback,
             """
 ⭐ <b>Custom Loop Interval</b>
 ━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1197,7 +987,8 @@ Safest option.
 
     kb.adjust(1)
 
-    await callback.message.edit_text(
+    await smart_edit(
+    callback,
         f"""
 🚀 <b>Campaign Ready</b>
 ━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1209,7 +1000,9 @@ Ready to start your campaign?
 """,
         reply_markup=kb.as_markup()
     )
-
+    await state.update_data(
+      post_message_id=callback.message.message_id
+)
 
 
 # ==============================
@@ -1241,12 +1034,13 @@ async def delay_continue(
         CampaignState.waiting_confirm
     )
 
-    await callback.message.edit_text(
+    await smart_edit(
+    callback,
         f"""
 📋 <b>Confirm Campaign</b>
 ━━━━━━━━━━━━━━━━━━━━━━━━━
 📢 Account :<code>{data['account_id']}</code>
-👥 Groups :<code>{len(data.get('selected_groups', data.get('manual_groups', [])))}</code>
+👥 Groups :<code>{len(data.get("selected_groups", []))}</code>
 🔁 Loops :<code>{loops}</code>
 ⚡ Send Delay :<code>3 Second</code>
 ⏳ Repeat Delay :<code>24 Hours</code>
@@ -1284,10 +1078,9 @@ async def confirm_campaign(
     data = await state.get_data()
 
     campaign = await CampaignRepository.create(
-        account_id=data["account_id"],
-        post_data=data["post_data"],
-        media_path=data.get("media_path")
-    )
+    account_id=data["account_id"],
+    post_data=data["post_data"],
+ )
 
     await CampaignRepository.update_loop(
         campaign.id,
@@ -1326,16 +1119,6 @@ async def confirm_campaign(
                 group.get("title")
             )
 
-    elif data.get("manual_groups"):
-
-        for group in data["manual_groups"]:
-
-            await CampaignRepository.add_target(
-                campaign.id,
-                group["id"],
-                group.get("username"),
-                group.get("title")
-            )
 
     await CampaignRepository.update_status(
         campaign.id,
@@ -1348,23 +1131,42 @@ async def confirm_campaign(
         )
     )
 
+    from aiogram.utils.keyboard import InlineKeyboardBuilder
+
+    post_message_id = data["post_message_id"]
+
     await state.clear()
 
-    await callback.message.edit_text(
-    """
-✅ <b>Campaign Created Successfully</b>
-━━━━━━━━━━━━━━━━━━━━━━━━━
-•Your campaign has been
-created successfully.
+    kb = InlineKeyboardBuilder()
 
-•Thank you for using
-<b>VTH Ads Bot</b>.
-━━━━━━━━━━━━━━━━━━━━━━━━━
-🏠 Type <code>/start</code>
-to return to the dashboard.
-"""
+    kb.button(
+    text="📊 My Campaigns",
+    callback_data="my_campaigns"
 )
 
+    kb.button(
+    text="🏠 Home",
+    callback_data="home"
+)
+
+    kb.adjust(1)
+
+    await smart_edit(
+    callback,
+    """
+✅ <b>Campaign Created Successfully</b>
+━━━━━━━━━━━━━━━━━━━━━━
+
+Your campaign has been created successfully.
+
+Thank you for using
+<b>VTH Ads Bot</b>.
+
+━━━━━━━━━━━━━━━━━━━━━━
+""",
+    reply_markup=kb.as_markup()
+)
+    
     await callback.answer()
 
 

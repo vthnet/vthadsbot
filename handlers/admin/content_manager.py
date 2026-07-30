@@ -11,7 +11,7 @@ from aiogram.types import (
 
 from config import config
 from database.repository.bot_setting_repo import BotSettingRepository
-
+from utils.smart_edit import smart_edit
 router = Router()
 
 
@@ -82,16 +82,17 @@ async def cms_page(
         page=page
     )
 
-    await callback.message.edit_text(
+    await smart_edit(
+    callback,
         f"""
 📝 <b>{PAGES[page]}</b>
 
-Send:
-• Text
-• Photo + Caption
+Send the page text.
+
 HTML is supported.
 
-After sending you'll receive a preview.
+Only the Home page supports an image.
+All other pages are text only.
 """
     )
 
@@ -99,38 +100,34 @@ After sending you'll receive a preview.
 
 
 @router.message(CMSState.waiting_content)
-async def preview_content(
-    message: Message,
-    state: FSMContext
-):
+async def preview_content(message: Message, state: FSMContext):
+
+    data = await state.get_data()
+    page = data["page"]
 
     kb = InlineKeyboardMarkup(
-    inline_keyboard=[
-        [
-            InlineKeyboardButton(
-                text="✅ Save",
-                callback_data="cms_save"
-            ),
-            InlineKeyboardButton(
-                text="🗑 Remove Image",
-                callback_data="cms_remove_image"
-            ),
-        ],
-        [
-            InlineKeyboardButton(
-                text="❌ Cancel",
-                callback_data="cms_cancel"
-            )
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text="✅ Save",
+                    callback_data="cms_save"
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text="❌ Cancel",
+                    callback_data="cms_cancel"
+                )
+            ]
         ]
-    ]
-)
+    )
+
+    text = message.html_text or message.caption_html or ""
 
     media_type = None
     file_id = None
-    text = message.html_text or message.caption_html or ""
 
-    if message.photo:
-
+    if page == "home" and message.photo:
         media_type = "photo"
         file_id = message.photo[-1].file_id
 
@@ -139,9 +136,7 @@ async def preview_content(
             caption=text,
             reply_markup=kb
         )
-
     else:
-
         await message.answer(
             text,
             reply_markup=kb
@@ -162,30 +157,14 @@ async def cms_cancel(
 
     await state.clear()
 
-    await callback.message.edit_text(
+    await smart_edit(
+    callback,
         "❌ Cancelled."
     )
 
     await callback.answer()
 
 
-@router.callback_query(F.data == "cms_remove_image")
-async def cms_remove_image(
-    callback: CallbackQuery,
-    state: FSMContext
-):
-    data = await state.get_data()
-
-    data["media_type"] = None
-    data["file_id"] = None
-
-    await state.update_data(**data)
-
-    await callback.answer("🗑 Image removed.")
-
-    await callback.message.edit_text(
-        data.get("text") or "No text."
-    ) 
 
 @router.callback_query(F.data == "cms_save")
 async def cms_save(

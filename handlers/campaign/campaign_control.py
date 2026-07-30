@@ -2,7 +2,7 @@ from aiogram import Router, F
 from aiogram.types import CallbackQuery
 
 from database.repository.campaign_repo import CampaignRepository
-
+from utils.smart_edit import smart_edit
 router = Router()
 
 
@@ -77,7 +77,8 @@ async def loop_campaign(callback: CallbackQuery):
 
     await callback.answer()
 
-    await callback.message.edit_text(
+    await smart_edit(
+    callback,
         "🔁 Loop settings will be added in the next update."
     )
 
@@ -87,7 +88,8 @@ async def interval_campaign(callback: CallbackQuery):
 
     await callback.answer()
 
-    await callback.message.edit_text(
+    await smart_edit(
+    callback,
         "⏱ Interval settings will be added in the next update."
     )
 
@@ -97,7 +99,8 @@ async def schedule_campaign(callback: CallbackQuery):
 
     await callback.answer()
 
-    await callback.message.edit_text(
+    await smart_edit(
+    callback,
         "📅 Scheduler will be added in the next update."
     )
 
@@ -107,7 +110,8 @@ async def stats_campaign(callback: CallbackQuery):
 
     await callback.answer()
 
-    await callback.message.edit_text(
+    await smart_edit(
+    callback,
         "📊 Statistics panel coming soon."
     )
 
@@ -123,7 +127,8 @@ async def delete_campaign(callback: CallbackQuery):
         campaign_id
     )
 
-    await callback.message.edit_text(
+    await smart_edit(
+    callback,
         "🗑 Campaign Deleted Successfully."
     )
 

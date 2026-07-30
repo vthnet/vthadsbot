@@ -83,14 +83,14 @@ async def success_keyboard(user_id: int):
     )
 
     kb.button(
-        text="👤 my_accounts",
-        callback_data="my_accounts"
-    )
+       text="👤 My Accounts",
+     callback_data="my_accounts"
+   )
 
     kb.button(
-        text="📢create_campaign",
-        callback_data="create_campaign"
-    )
+      text="📢 Create Campaign",
+      callback_data="create_campaign"
+   )
 
     kb.adjust(1, 2)
 
@@ -102,7 +102,7 @@ async def back_keyboard(user_id: int):
     kb = InlineKeyboardBuilder()
 
     kb.button(
-        text="🏠home",
+        text="🏠 home",
         callback_data="home"
     )
 

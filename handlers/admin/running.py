@@ -1,8 +1,10 @@
 from aiogram import Router
 from aiogram.filters import Command
+from aiogram.types import Message
 
 from sqlalchemy import select
 
+from config import config
 from database.session import SessionLocal
 from database.models.user import User
 from database.models.account import Account
@@ -12,13 +14,16 @@ router = Router()
 
 
 @router.message(Command("running"))
-async def running_campaigns(message):
+async def running_campaigns(message: Message):
+
+    if message.from_user.id not in config.ADMINS:
+        return
 
     async with SessionLocal() as session:
 
         result = await session.execute(
             select(Campaign).where(
-                Campaign.running == True
+                Campaign.running.is_(True)
             )
         )
 

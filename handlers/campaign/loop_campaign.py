@@ -4,7 +4,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from database.session import SessionLocal
 from database.models.campaign import Campaign
-
+from utils.smart_edit import smart_edit
 router = Router()
 
 
@@ -44,7 +44,8 @@ async def loop_menu(callback: CallbackQuery):
         callback.data.split("_")[2]
     )
 
-    await callback.message.edit_text(
+    await smart_edit(
+    callback,
         "🔁 <b>Select Loop Count</b>",
         reply_markup=loop_keyboard(
             campaign_id
@@ -92,6 +93,7 @@ async def set_loop(callback: CallbackQuery):
         "✅ Loop updated"
     )
 
-    await callback.message.edit_text(
+    await smart_edit(
+    callback,
         f"✅ Loop set to {'∞ Infinite' if value == 'inf' else value + 'x'}"
     )

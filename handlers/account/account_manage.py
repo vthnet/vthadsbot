@@ -4,7 +4,7 @@ from aiogram.types import CallbackQuery
 from database.repository.account_repo import AccountRepository
 from keyboards.account import account_manage_keyboard
 from services.sessions.session_checker import check_session
-
+from utils.smart_edit import smart_edit
 router = Router()
 
 
@@ -47,7 +47,8 @@ async def account_details(callback: CallbackQuery):
 --------------------------------------------------
 """
 
-    await callback.message.edit_text(
+    await smart_edit(
+    callback,
         text,
         reply_markup=account_manage_keyboard(
             account.id

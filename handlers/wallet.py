@@ -20,7 +20,7 @@ async def wallet(callback: CallbackQuery):
         f"""
 💰 VTH WALLET
 -------------------------
-C O M I N G  S O O N 
+C O M I N G  S O O N
 -------------------------
 """,
         show_alert=True

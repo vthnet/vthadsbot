@@ -5,6 +5,13 @@ import os
 load_dotenv()
 
 
+def getenv_int(name: str, default: int = 0) -> int:
+    try:
+        return int(os.getenv(name, str(default)))
+    except (TypeError, ValueError):
+        return default
+
+
 @dataclass
 class Config:
 
@@ -14,18 +21,18 @@ class Config:
 
     DATABASE_URL: str = os.getenv("DATABASE_URL", "")
 
-    API_ID: int = int(os.getenv("API_ID", "0"))
+    API_ID: int = getenv_int("API_ID")
     API_HASH: str = os.getenv("API_HASH", "")
 
     ADMINS: list[int] = field(
         default_factory=lambda: [
             int(x)
             for x in os.getenv("ADMINS", "").split(",")
-            if x.strip()
+            if x.strip().isdigit()
         ]
     )
 
-    LOG_CHANNEL: int = int(os.getenv("LOG_CHANNEL", "0"))
+    LOG_CHANNEL: int = getenv_int("LOG_CHANNEL")
 
     FORCE_JOIN_1: str = os.getenv("FORCE_JOIN_1", "")
     FORCE_JOIN_2: str = os.getenv("FORCE_JOIN_2", "")

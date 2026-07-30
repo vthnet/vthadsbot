@@ -4,7 +4,7 @@ from aiogram.fsm.context import FSMContext
 
 from handlers.campaign.create_campaign import CampaignState
 from keyboards.delay import delay_keyboard
-
+from utils.smart_edit import smart_edit
 router = Router()
 
 
@@ -33,10 +33,11 @@ async def select_loop(
         )
 
     await state.set_state(
-        CampaignState.waiting_delay
-    )
+    CampaignState.waiting_delay
+)
 
-    await callback.message.edit_text(
+    await smart_edit(
+    callback,
         "⏱ <b>Select Campaign Delay</b>",
         reply_markup=delay_keyboard(False)
     )

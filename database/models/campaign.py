@@ -3,10 +3,10 @@ from datetime import datetime
 from sqlalchemy import (
     Integer,
     String,
-    Text,
     Boolean,
     ForeignKey,
     DateTime,
+    Text,
 )
 
 from sqlalchemy.orm import (
@@ -142,8 +142,3 @@ class Campaign(Base):
         default=datetime.utcnow
     )
 
-    # Campaign media (photo path)
-    media_path: Mapped[str | None] = mapped_column(
-        Text,
-        nullable=True
-    )

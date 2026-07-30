@@ -3,17 +3,27 @@ from aiogram.exceptions import TelegramBadRequest
 
 
 async def smart_edit(
-    callback: CallbackQuery,
+    event,
     text: str,
     reply_markup=None,
 ):
+    if isinstance(event, CallbackQuery):
+        msg = event.message
+        callback = event
+    else:
+        msg = event
+        callback = None
+
+    result = msg
+
     try:
-        await callback.message.edit_text(
+        result = await msg.edit_text(
             text=text,
             reply_markup=reply_markup,
         )
 
     except TelegramBadRequest as e:
+
         error = str(e).lower()
 
         if "message is not modified" in error:
@@ -23,21 +33,33 @@ async def smart_edit(
             "there is no text in the message to edit" in error
             or "message can't be edited" in error
         ):
+
             try:
-                await callback.message.edit_caption(
+                result = await msg.edit_caption(
                     caption=text,
                     reply_markup=reply_markup,
                 )
+
             except TelegramBadRequest:
-                pass
+                result = await msg.answer(
+                    text=text,
+                    reply_markup=reply_markup,
+                )
 
         elif "message to edit not found" in error:
-            return
+
+            result = await msg.answer(
+                text=text,
+                reply_markup=reply_markup,
+            )
 
         else:
             raise
 
-    try:
-        await callback.answer()
-    except TelegramBadRequest:
-        pass
+    if callback:
+        try:
+            await callback.answer()
+        except TelegramBadRequest:
+            pass
+
+    return result

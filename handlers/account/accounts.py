@@ -88,10 +88,10 @@ async def get_phone(
 
     data = await state.get_data()
 
-    await message.bot.edit_message_text(
+    await message.bot.edit_message_caption(
         chat_id=message.chat.id,
         message_id=data["flow_message_id"],
-        text="""
+        caption="""
 ⏳ <b>Connecting to Telegram...</b>
 --------------------------------------------------
 Requesting OTP from Telegram.
@@ -115,10 +115,10 @@ Please wait...
 
     data = await state.get_data()
 
-    await message.bot.edit_message_text(
+    await message.bot.edit_message_caption(
         chat_id=message.chat.id,
         message_id=data["flow_message_id"],
-        text="""
+        caption="""
 📨 <b>OTP Sent Successfully</b>
 --------------------------------------------------
 Please enter the verification
@@ -137,10 +137,10 @@ async def get_code(
 
     data = await state.get_data()
 
-    await message.bot.edit_message_text(
+    await message.bot.edit_message_caption(
         chat_id=message.chat.id,
         message_id=data["flow_message_id"],
-        text="""
+        caption="""
 ⏳ <b>Verifying OTP...</b>
 --------------------------------------------------
 Please wait...
@@ -155,10 +155,10 @@ Please wait...
 
     if result["status"] == "wrong_code":
 
-        await message.bot.edit_message_text(
+        await message.bot.edit_message_caption(
             chat_id=message.chat.id,
             message_id=data["flow_message_id"],
-            text="""
+            caption="""
 ❌ <b>Wrong OTP</b>
 --------------------------------------------------
 The verification code is incorrect.
@@ -175,10 +175,10 @@ Please enter the correct OTP.
             AddAccount.waiting_password
         )
 
-        await message.bot.edit_message_text(
+        await message.bot.edit_message_caption(
             chat_id=message.chat.id,
             message_id=data["flow_message_id"],
-            text="""
+            caption="""
 🔐 <b>Two-Step Verification</b>
 --------------------------------------------------
 Your Telegram account
@@ -207,10 +207,10 @@ async def get_password(
 
     data = await state.get_data()
 
-    await message.bot.edit_message_text(
+    await message.bot.edit_message_caption(
         chat_id=message.chat.id,
         message_id=data["flow_message_id"],
-        text="""
+        caption="""
 ⏳ <b>Logging In...</b>
 --------------------------------------------------
 Verifying your password...
@@ -277,10 +277,10 @@ async def save_account(
 
     kb.adjust(2)
 
-    await message.bot.edit_message_text(
+    await message.bot.edit_message_caption(
         chat_id=message.chat.id,
         message_id=data["flow_message_id"],
-        text=f"""
+        caption=f"""
 ✅ <b>Telegram Account Added Successfully</b>
 --------------------------------------------------
 👤 Account Name :<b>{result["user"].first_name}</b>

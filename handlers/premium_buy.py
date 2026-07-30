@@ -10,7 +10,7 @@ from aiogram.fsm.context import FSMContext
 
 from handlers.premium.state import PremiumState
 from database.repository.user_repo import UserRepository
-
+from utils.smart_edit import smart_edit
 router = Router()
 
 
@@ -35,7 +35,8 @@ async def buy_premium(callback: CallbackQuery):
 
     kb.adjust(1)
 
-    await callback.message.edit_text(
+    await smart_edit(
+    callback,
         f"""
 👑 <b>VTH Premium Membership</b>
 -------------------------
@@ -66,7 +67,8 @@ async def premium_paid(
         PremiumState.waiting_details
     )
 
-    await callback.message.edit_text(
+    await smart_edit(
+    callback,
         """
 💎 <b>Premium Purchase</b>
 Please send the following details in ONE message.
@@ -163,7 +165,8 @@ VTH Network ❤️
 """
     )
 
-    await callback.message.edit_text(
+    await smart_edit(
+    callback,
         callback.message.html_text +
         "\n\n✅ <b>APPROVED</b>"
     )
@@ -192,7 +195,8 @@ if you believe this is a mistake.
 """
     )
 
-    await callback.message.edit_text(
+    await smart_edit(
+    callback,
         callback.message.html_text +
         "\n\n❌ <b>REJECTED</b>"
     )
