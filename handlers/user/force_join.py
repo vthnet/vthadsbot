@@ -73,15 +73,15 @@ async def force_join_callback(callback: CallbackQuery):
     from handlers.user.start import send_home
 
     user = await UserRepository.get_user(
-        callback.from_user.id
-    )
+    callback.from_user.id
+)
 
-    if not user:
-        await callback.answer(
-            "User not found.",
-            show_alert=True,
-        )
-        return
+    if user is None:
+     user = await UserRepository.create_user(
+        telegram_id=callback.from_user.id,
+        username=callback.from_user.username,
+        first_name=callback.from_user.first_name,
+    )
 
     await send_home(
         callback,
