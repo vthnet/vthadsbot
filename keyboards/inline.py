@@ -133,9 +133,10 @@ def force_join_keyboard():
         )
 
     kb.button(
-        text="✅ I've Joined",
-        callback_data="home"
-    )
+    text="✅ I've Joined",
+    url=f"https://t.me/{config.BOT_USERNAME}?start=verify"
+)
+    
 
     kb.adjust(1)
 

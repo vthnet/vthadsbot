@@ -34,7 +34,6 @@ Checking all Telegram accounts.
     )
 
     if not user:
-
         await callback.answer(
             "User not found",
             show_alert=True
@@ -47,34 +46,25 @@ Checking all Telegram accounts.
 
     if not accounts:
 
-     await callback.answer(
-        """
-❌ No Telegram Accounts Found
+        from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-Please add a Telegram account first.
-""",
-        show_alert=True
-    )
+        kb = InlineKeyboardBuilder()
 
-    from aiogram.utils.keyboard import InlineKeyboardBuilder
+        kb.button(
+            text="➕ Add Account",
+            callback_data="add_account"
+        )
 
-    kb = InlineKeyboardBuilder()
+        kb.button(
+            text="🏠 Home",
+            callback_data="home"
+        )
 
-    kb.button(
-        text="➕ Add Account",
-        callback_data="add_account"
-    )
+        kb.adjust(1)
 
-    kb.button(
-        text="🏠 Home",
-        callback_data="home"
-    )
-
-    kb.adjust(1)
-
-    await smart_edit(
-        callback,
-        """
+        await smart_edit(
+            callback,
+            """
 📱 <b>My Accounts</b>
 ━━━━━━━━━━━━━━━━━━━━━━
 ❌ <b>No Telegram Accounts Found</b>
@@ -85,29 +75,34 @@ accounts yet.
 Click <b>➕ Add Account</b> to get started.
 ━━━━━━━━━━━━━━━━━━━━━━
 """,
-        kb.as_markup()
-    )
+            kb.as_markup()
+        )
 
-    return
+        return
 
     active = 0
+
     text = (
         "📱 <b>My Telegram Accounts</b>\n"
-        "--------------------------------------------------\n\n"
+        "━━━━━━━━━━━━━━━━━━━━━━\n\n"
     )
 
     for acc in accounts:
 
-        status = await check_session(
-            acc.session_string
-        )
+        try:
+            status = await check_session(
+                acc.session_string
+            )
 
-        await AccountRepository.update_status(
-            acc.id,
-            status
-        )
+            await AccountRepository.update_status(
+                acc.id,
+                status
+            )
 
-        acc.active = status
+            acc.active = status
+
+        except Exception:
+            status = False
 
         icon = "🟢 Online" if status else "🔴 Expired"
 
@@ -121,7 +116,7 @@ Click <b>➕ Add Account</b> to get started.
         )
 
     text += (
-        "--------------------------------------------------\n"
+        "━━━━━━━━━━━━━━━━━━━━━━\n"
         f"📊 Total Accounts : <b>{len(accounts)}</b>\n"
         f"🟢 Active : <b>{active}</b>\n"
         f"🔴 Expired : <b>{len(accounts)-active}</b>"
@@ -132,7 +127,6 @@ Click <b>➕ Add Account</b> to get started.
         text,
         accounts_keyboard(accounts)
     )
-
 
 @router.callback_query(F.data.startswith("account_"))
 async def account_details(callback: CallbackQuery):

@@ -7,7 +7,6 @@ from database.models.user import User
 
 class AccountRepository:
 
-
     @staticmethod
     async def get_user(telegram_id: int):
 
@@ -20,8 +19,6 @@ class AccountRepository:
             )
 
             return result.scalar_one_or_none()
-
-
 
     @staticmethod
     async def get_account(account_id: int):
@@ -36,8 +33,6 @@ class AccountRepository:
 
             return result.scalar_one_or_none()
 
-
-
     @staticmethod
     async def count_accounts(user_id: int):
 
@@ -49,8 +44,6 @@ class AccountRepository:
             )
 
             return result.scalar() or 0
-
-
 
     @staticmethod
     async def get_accounts(user_id: int):
@@ -64,19 +57,34 @@ class AccountRepository:
 
             accounts = result.scalars().all()
 
+            print("=" * 60)
+            print("GET ACCOUNTS")
+            print("USER ID:", user_id)
+            print("ROWS:", len(accounts))
+
+            for acc in accounts:
+                print(
+                    "ACCOUNT:",
+                    acc.id,
+                    "USER:",
+                    acc.user_id,
+                    "PHONE:",
+                    acc.phone
+                )
+
+            print("=" * 60)
+
             unique_accounts = []
             seen_sessions = set()
 
             for acc in accounts:
-               if acc.session_string in seen_sessions:
+                if acc.session_string in seen_sessions:
                     continue
- 
-               seen_sessions.add(acc.session_string)
-               unique_accounts.append(acc)
+
+                seen_sessions.add(acc.session_string)
+                unique_accounts.append(acc)
 
             return unique_accounts
-
-
 
     @staticmethod
     async def add_account(
@@ -85,6 +93,8 @@ class AccountRepository:
         phone: str,
         session_string: str,
     ):
+
+        print("ACCOUNT SAVED FOR USER:", user_id)
 
         async with SessionLocal() as session:
 
@@ -102,8 +112,6 @@ class AccountRepository:
 
             return account
 
-
-
     @staticmethod
     async def delete_account(account_id: int):
 
@@ -115,8 +123,6 @@ class AccountRepository:
             )
 
             await session.commit()
-
-
 
     @staticmethod
     async def update_status(
@@ -132,11 +138,8 @@ class AccountRepository:
             )
 
             if account:
-
                 account.active = status
-
                 await session.commit()
-
 
     @staticmethod
     async def get_active_accounts():

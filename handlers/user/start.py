@@ -76,15 +76,24 @@ async def send_home(
             }
             home_set("home", setting)
 
-    if setting and setting.get("text"):
-        text = (
-            setting["text"]
-            .replace("{name}", user.first_name)
-            .replace("{username}", user.username or "None")
-            .replace("{userid}", str(user.telegram_id))
-        )
-    else:
-        text = await dashboard_text(user)
+    # Temporary safe text (to test HTML issue)
+    text = f"""
+V  T  H   ●   A  D  S   ●  B  O  T  
+------------------------------------------------------
+☆ Welcome: <b>{user.first_name}</b>
+<blockquote>To the ultimate Telegram advertising platform powered by VTH Network.</blockquote>
+ <b>What Bot Can Do:</b>
+<blockquote>• Create & manage ad campaigns(ads)
+• Run free advertisements
+• Add multiple Telegram accounts
+• Auto Bio Rotation (up to 5 bios)
+• Track campaign performance
+• Secure account management
+• Subscription & wallet system</blockquote>
+Bot's detail guide : @vthadsguide
+Support : @vthnetsupport
+------------------------------------------------------
+"""
 
     # PHOTO HOME
     if setting and setting.get("media_type") == "photo":
@@ -195,6 +204,7 @@ Please try again later.
 
     print(f"Send Home: {time.perf_counter() - timer:.3f}s")
     print(f"START TOTAL: {time.perf_counter() - total_timer:.3f}s")
+
 
 @router.callback_query(F.data == "home")
 async def home_callback(
