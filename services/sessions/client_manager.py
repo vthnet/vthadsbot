@@ -18,6 +18,13 @@ class ClientManager:
 
     async def create_client(self, user_id: int):
 
+
+        print("=" * 50)
+        print(f"API_ID: {config.API_ID}")
+        print(f"API_HASH: {config.API_HASH}")
+        print("=" * 50)
+
+
         client = Client(
             name=f"temp_{user_id}",
             api_id=config.API_ID,
