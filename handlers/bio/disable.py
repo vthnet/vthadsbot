@@ -56,8 +56,10 @@ Auto Bio Rotation.
         return
 
     kb.button(
-        text="🔙 Back",
-        callback_data="bio_home"
+        text="Back",
+        callback_data="bio_home",
+        style="danger",
+        icon_custom_emoji_id="5409284148491726576"
     )
 
     kb.adjust(1)

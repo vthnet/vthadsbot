@@ -141,14 +141,17 @@ account to continue.
             text=(
                 f"🟢 {account.account_name} ✓"
                 if enabled
-                else f"⚪ {account.account_name}"
+                else f"⚪ {account.account_name}",
             ),
-            callback_data=f"bio_account_{account.id}"
+            callback_data=f"bio_account_{account.id}",
+             style="primary"
         )
 
     kb.button(
-        text="🔙 Back",
-        callback_data="bio_home"
+        text="Back",
+        callback_data="bio_home",
+        style="danger",
+        icon_custom_emoji_id="5409284148491726576"
     )
 
     kb.adjust(1)

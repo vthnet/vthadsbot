@@ -16,7 +16,7 @@ def settings_keyboard():
     )
 
     kb.button(
-        text="🔙 Back",
+        text="Back",
         callback_data="home"
     )
 

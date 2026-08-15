@@ -29,7 +29,9 @@ async def support(callback: CallbackQuery):
 
     kb.button(
         text="🏠 Back",
-        callback_data="home"
+        callback_data="home",
+        style="success",
+                    icon_custom_emoji_id="5193119436621494267"
     )
 
     kb.adjust(1)
@@ -188,7 +190,9 @@ Example:
 
     kb.button(
         text="🏠 Home",
-        callback_data="home"
+        callback_data="home",
+        style="success",
+                    icon_custom_emoji_id="5193119436621494267"
     )
 
     await message.bot.edit_message_text(

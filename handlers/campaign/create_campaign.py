@@ -95,13 +95,17 @@ def no_account_keyboard():
     kb = InlineKeyboardBuilder()
 
     kb.button(
-        text="➕ Add Account",
-        callback_data="add_account"
+        text="Add Account",
+        callback_data="add_account",
+        style="primary",
+        icon_custom_emoji_id="5287354223141342798"
     )
 
     kb.button(
-        text="🔙 Back",
-        callback_data="home"
+        text="Back",
+        callback_data="home",
+        style="danger",
+        icon_custom_emoji_id="5409284148491726576"
     )
 
     kb.adjust(1, 1)
@@ -242,17 +246,22 @@ account and add a new one.
 
         kb.button(
             text="➕ Add Telegram Account",
-            callback_data="add_account"
+            callback_data="add_account",
+            icon_custom_emoji_id="5193119436621494267"
         )
 
         kb.button(
             text="📊 My Campaigns",
-            callback_data="my_campaigns"
+            callback_data="my_campaigns",
+            icon_custom_emoji_id="5193119436621494267"
         )
 
         kb.button(
-            text="🏠 Home",
-            callback_data="home"
+            text="Home",
+            callback_data="home",
+            style="success",
+            icon_custom_emoji_id="5193119436621494267"
+
         )
 
         kb.adjust(1)
@@ -976,13 +985,17 @@ Safest option.
     kb = InlineKeyboardBuilder()
 
     kb.button(
-        text="✅ Start Campaign",
-        callback_data="confirm_campaign"
+        text="Start Campaign",
+        callback_data="confirm_campaign",
+        style="success",
+        icon_custom_emoji_id="5389057356493511934"
     )
 
     kb.button(
-        text="🔙 Back",
-        callback_data="back_loop_interval"
+        text="Back",
+        callback_data="back_loop_interval",
+        style="danger",
+        icon_custom_emoji_id="5409284148491726576"
     )
 
     kb.adjust(1)
@@ -1049,12 +1062,16 @@ Start this campaign?
 """,
         reply_markup=InlineKeyboardBuilder()
         .button(
-            text="✅ Start Campaign",
-            callback_data="confirm_campaign"
+            text="Start Campaign",
+            callback_data="confirm_campaign",
+            style="success",
+            icon_custom_emoji_id="4987757216040747796"
         )
         .button(
-            text="❌ Cancel",
-            callback_data="home"
+            text="Cancel",
+            callback_data="home",
+            style="danger",
+            icon_custom_emoji_id="5846210329700217522"
         )
         .adjust(1)
         .as_markup()
@@ -1140,13 +1157,17 @@ async def confirm_campaign(
     kb = InlineKeyboardBuilder()
 
     kb.button(
-    text="📊 My Campaigns",
-    callback_data="my_campaigns"
+    text="My Campaigns",
+    callback_data="my_campaigns",
+    style="primary",
+    icon_custom_emoji_id="5409111052719767901"
 )
 
     kb.button(
-    text="🏠 Home",
-    callback_data="home"
+    text="Home",
+    callback_data="home",
+    style="success",
+    icon_custom_emoji_id="5193119436621494267"
 )
 
     kb.adjust(1)
@@ -1235,8 +1256,10 @@ async def custom_repeat_interval(
     kb = InlineKeyboardBuilder()
 
     kb.button(
-        text="✅ Start Campaign",
-        callback_data="confirm_campaign"
+        text="Start Campaign",
+        callback_data="confirm_campaign",
+        style="success",
+        icon_custom_emoji_id="4987757216040747796"
     )
 
     kb.adjust(1)

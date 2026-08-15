@@ -51,12 +51,15 @@ Please add a bio first.
 
         kb.button(
             text=preview,
-            callback_data=f"delete_bio_{bio.id}"
+            callback_data=f"delete_bio_{bio.id}",
+            style="primary"
         )
 
     kb.button(
-        text="🔙 Back",
-        callback_data="bio_home"
+        text="Back",
+        callback_data="bio_home",
+        style="danger",
+        icon_custom_emoji_id="5193119436621494267"
     )
 
     kb.adjust(1)

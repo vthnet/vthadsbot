@@ -21,13 +21,17 @@ def loop_keyboard(campaign_id: int):
         )
 
     kb.button(
-        text="♾ Infinite",
-        callback_data=f"set_loop_{campaign_id}_inf"
+        text="Infinite",
+        callback_data=f"set_loop_{campaign_id}_inf",
+        style="primary",
+        icon_custom_emoji_id='5364087614930431949'
     )
 
     kb.button(
-        text="🔙 Back",
-        callback_data=f"open_campaign_{campaign_id}"
+        text="Back",
+        callback_data=f"open_campaign_{campaign_id}",
+        style="danger",
+        icon_custom_emoji_id='5409284148491726576'
     )
 
     kb.adjust(2, 2, 1, 1)

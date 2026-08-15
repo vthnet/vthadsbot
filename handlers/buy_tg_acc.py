@@ -13,23 +13,33 @@ async def buy_tg_acc(callback: CallbackQuery):
     kb = InlineKeyboardBuilder()
 
     kb.button(
-        text="🤖 Buy Telegram Accounts",
-        url="https://t.me/Quickcodes_bot"
+        text="Buy Tg Accounts",
+        url="https://t.me/Quickcodes_bot",
+        style="success",
+        icon_custom_emoji_id="6296218646284863141"
     )
 
     kb.button(
-        text="🛟 Support",
-        url="https://t.me/vthnetsupport"
+        text="Support",
+        url="https://t.me/vthnetsupport",
+        style="success",
+        icon_custom_emoji_id="5866185084427572234"
     )
 
     kb.button(
-        text="👑 Owner",
-        url="https://t.me/valriks"
+        text="Developer",
+        url="https://t.me/valriks",
+        style="danger",
+        icon_custom_emoji_id="5819109854861595641"
     )
 
     kb.button(
-        text="🏠 Home",
-        callback_data="home"
+        text="Home",
+        callback_data="home",
+        style="primary",
+        icon_custom_emoji_id="5193119436621494267",
+        
+
     )
 
     kb.adjust(1)

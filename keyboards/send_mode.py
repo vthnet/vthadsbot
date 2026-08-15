@@ -7,13 +7,17 @@ def send_mode_keyboard():
     kb = InlineKeyboardBuilder()
 
     kb.button(
-        text="📝 Copy",
-        callback_data="send_copy"
+        text="Copy",
+        callback_data="send_copy",
+        style="primary",
+        icon_custom_emoji_id="5212921495008845628"
     )
 
     kb.button(
-        text="↪️ Forward",
-        callback_data="send_forward"
+        text="Forward",
+        callback_data="send_forward",
+        style="primary",
+        icon_custom_emoji_id="6129802875611651951"
     )
 
     kb.adjust(2)

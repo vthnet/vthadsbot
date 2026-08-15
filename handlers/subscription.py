@@ -21,18 +21,24 @@ async def subscription(callback: CallbackQuery):
     if user and user.is_premium:
 
         kb.button(
-            text="✏️ Custom Bio",
-            callback_data="custom_bio"
+            text="Custom Bio",
+            callback_data="custom_bio",
+            style="primary",
+            icon_custom_emoji_id="5370951118698339120"
         )
 
         kb.button(
-            text="🔄 Bio Rotation",
-            callback_data="bio_rotation"
+            text="Bio Rotation",
+            callback_data="bio_rotation",
+            style="primary",
+            icon_custom_emoji_id="5219934485113493317"
         )
 
         kb.button(
-            text="🏠 Home",
-            callback_data="home"
+            text="Home",
+            callback_data="home",
+            style="success",
+            icon_custom_emoji_id="5193119436621494267"
         )
 
         kb.adjust(1)
@@ -57,13 +63,17 @@ async def subscription(callback: CallbackQuery):
     else:
 
         kb.button(
-            text="💳 Buy Premium",
-            callback_data="buy_premium"
+            text="Buy Premium",
+            callback_data="buy_premium",
+            style="success",
+            icon_custom_emoji_id="5262747715552438702"
         )
 
         kb.button(
-            text="🏠 Home",
-            callback_data="home"
+            text="Home",
+            callback_data="home",
+            style="danger",
+            icon_custom_emoji_id="5193119436621494267"
         )
 
         kb.adjust(1)

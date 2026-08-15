@@ -266,13 +266,17 @@ async def save_account(
     kb = InlineKeyboardBuilder()
 
     kb.button(
-        text="🏠 Home",
-        callback_data="home"
+        text="Home",
+        callback_data="home",
+        style="primary",
+       icon_custom_emoji_id="5193119436621494267"
     )
 
     kb.button(
-        text="👤 My Accounts",
-        callback_data="my_accounts"
+        text="My Accounts",
+        callback_data="my_accounts",
+        style="primary",
+        icon_custom_emoji_id="5346136537123801643"
     )
 
     kb.adjust(2)

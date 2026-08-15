@@ -35,27 +35,39 @@ async def show_feedback(message_or_callback):
             [
                 InlineKeyboardButton(
                     text="⭐",
-                    callback_data="rate_1"
+                    callback_data="rate_1",
+                    style="success",
+                
                 ),
-                InlineKeyboardButton(
+                ],
+               [ InlineKeyboardButton(
                     text="⭐⭐",
-                    callback_data="rate_2"
+                    callback_data="rate_2",
+                    style="success",
+                    
                 ),
             ],
             [
                 InlineKeyboardButton(
                     text="⭐⭐⭐",
-                    callback_data="rate_3"
+                    callback_data="rate_3",
+                    style="success",
+                   
                 ),
-                InlineKeyboardButton(
+                ],
+               [ InlineKeyboardButton(
                     text="⭐⭐⭐⭐",
-                    callback_data="rate_4"
+                    callback_data="rate_4",
+                    style="success",
+                   
                 ),
             ],
             [
                 InlineKeyboardButton(
                     text="⭐⭐⭐⭐⭐",
-                    callback_data="rate_5"
+                    callback_data="rate_5",
+                    style="success",
+                   
                 ),
             ]
         ]

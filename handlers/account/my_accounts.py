@@ -51,13 +51,17 @@ Checking all Telegram accounts.
         kb = InlineKeyboardBuilder()
 
         kb.button(
-            text="➕ Add Account",
-            callback_data="add_account"
+            text="Add Account",
+            callback_data="add_account",
+            style="primary",
+            icon_custom_emoji_id="5287354223141342798"
         )
 
         kb.button(
-            text="🏠 Home",
-            callback_data="home"
+            text="Home",
+            callback_data="home",
+            style="primary",
+            icon_custom_emoji_id="5193119436621494267"
         )
 
         kb.adjust(1)
