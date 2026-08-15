@@ -151,7 +151,7 @@ async def back_keyboard(user_id: int):
 
 
 def force_join_keyboard():
-
+    print("🔥🔥🔥 NEW FORCE JOIN KEYBOARD LOADED 🔥🔥🔥")
     kb = InlineKeyboardBuilder()
 
     if config.FORCE_JOIN_1:
@@ -171,12 +171,11 @@ def force_join_keyboard():
         )
 
     kb.button(
-    text="I've Joined",
-    url=f"https://t.me/{config.BOT_USERNAME}?start=verify",
-    style="success",
-    icon_custom_emoji_id="4987757216040747796"
-)
-    
+        text="I've Joined",
+        callback_data="verify_join",
+        style="success",
+        icon_custom_emoji_id="4987757216040747796"
+    )
 
     kb.adjust(1)
 

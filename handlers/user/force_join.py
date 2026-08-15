@@ -57,12 +57,17 @@ async def check_force_join(user_id: int) -> bool:
 
 async def force_join_message(message: Message):
 
+    keyboard = force_join_keyboard()
+
+    print("\n========== FORCE JOIN KEYBOARD ==========")
+    print(keyboard.model_dump())
+    print("=========================================\n")
+
     await message.answer(
         "<b>🚫 Join both channels first.</b>\n\n"
-        "After joining press ✅ Verify.",
-        reply_markup=force_join_keyboard(),
+        "After joining press ✅ Verify .",
+        reply_markup=keyboard,
     )
-
 
 async def force_join_callback(callback: CallbackQuery):
 

@@ -334,6 +334,40 @@ Please try again later.
                 f"{fallback_error}"
             )
 
+@router.callback_query(F.data == "verify_join")
+async def verify_join_callback(callback: CallbackQuery):
+
+    print(
+        f"[VERIFY JOIN] Button clicked "
+        f"user_id={callback.from_user.id} "
+        f"username={callback.from_user.username}"
+    )
+
+    try:
+        await callback.answer("Checking membership...")
+
+        print("[VERIFY JOIN] Calling force_join_callback()")
+
+        await force_join_callback(callback)
+
+        print("[VERIFY JOIN] force_join_callback() completed")
+
+    except Exception as e:
+
+        print(
+            f"[VERIFY JOIN ERROR] "
+            f"type={type(e).__name__} "
+            f"error={e}"
+        )
+
+        try:
+            await callback.answer(
+                "Verification failed. Please try again.",
+                show_alert=True
+            )
+        except Exception:
+            pass
+
 @router.callback_query(F.data == "home")
 async def home_callback(
     callback: CallbackQuery,
