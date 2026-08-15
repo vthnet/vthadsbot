@@ -33,11 +33,27 @@ async def check_force_join(user_id: int) -> bool:
             ):
                 return False
 
-        except TelegramBadRequest:
+        except TelegramBadRequest as e:
+
+            print(
+                f"[Force Join] TelegramBadRequest "
+                f"channel={channel} "
+                f"user={user_id}: {e}"
+            )
+
+            return False
+
+        except Exception as e:
+
+            print(
+                f"[Force Join] Unexpected error "
+                f"channel={channel} "
+                f"user={user_id}: {e}"
+            )
+
             return False
 
     return True
-
 
 async def force_join_message(message: Message):
 

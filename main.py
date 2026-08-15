@@ -4,7 +4,7 @@ from loader import bot, dp
 
 from database.session import engine, Base
 import database.models
-
+from aiogram.types import ErrorEvent
 
 # USER
 from handlers.user.start import router as start_router
@@ -75,7 +75,7 @@ from handlers.bio.time import router as bio_time_router
 from handlers.bio.change_interval import (
     router as bio_change_interval_router
 )
-
+from utils.error_handler import global_error_handler
 
 async def startup():
 
@@ -84,14 +84,33 @@ async def startup():
             Base.metadata.create_all
         )
 
+async def global_error_handler(event: ErrorEvent):
+    try:
+        print("\n" + "=" * 70)
+        print("❌ UNHANDLED UPDATE ERROR")
+        print("=" * 70)
+
+        print(f"Exception: {event.exception}")
+
+        if event.update:
+            print(f"Update: {event.update}")
+
+        print("=" * 70 + "\n")
+
+    except Exception as e:
+        print(f"[ERROR HANDLER FAILED] {e}")
 
 async def main():
 
     await startup()
     await set_commands(bot)
 
+    dp.errors.register(global_error_handler)
+
     # USER
     dp.include_router(start_router)
+    # USER
+  
 
     # CAMPAIGNS
     dp.include_router(campaign_router)

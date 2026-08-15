@@ -1,3 +1,4 @@
+from html import escape
 from aiogram import Router, F
 from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
@@ -38,14 +39,11 @@ async def dashboard_text(user):
     if cached:
         return cached
 
-    text = f"""
+    text = """
 👋 <b>Welcome!</b>
 
 Choose an option below.
-""".replace(
-        "{name}",
-        user.first_name
-    )
+"""
 
     dashboard_set(
         user.id,
@@ -77,10 +75,11 @@ async def send_home(
             home_set("home", setting)
 
     # Temporary safe text (to test HTML issue)
+   
     text = f"""
 V  T  H   ●   A  D  S   ●  B  O  T  
 ------------------------------------------------------
-☆ Welcome: <b>{user.first_name}</b>
+☆ Welcome to VTH ADS BOT
 <blockquote>To the ultimate Telegram advertising platform powered by VTH Network.</blockquote>
  <b>What Bot Can Do:</b>
 <blockquote>• Create & manage ad campaigns(ads)
@@ -139,72 +138,201 @@ async def start(message: Message):
 
     total_timer = time.perf_counter()
 
-    if maintenance_enabled():
+    try:
+        # ====================================================
+        # MAINTENANCE
+        # ====================================================
 
-        await message.answer(
-            """
+        if maintenance_enabled():
+
+            await message.answer(
+                """
 🛠 <b>Maintenance</b>
 
 The bot is currently under maintenance.
 
 Please try again later.
 """
-        )
-        return
+            )
+            return
 
-    timer = time.perf_counter()
-
-    if not await check_force_join(
-        message.from_user.id
-    ):
-
-        print(f"Force Join: {time.perf_counter() - timer:.3f}s")
-        return await force_join_message(message)
-
-    print(f"Force Join: {time.perf_counter() - timer:.3f}s")
-
-    timer = time.perf_counter()
-
-    user = await UserRepository.get_user(
-        message.from_user.id
-    )
-
-    print(f"Get User: {time.perf_counter() - timer:.3f}s")
-
-    if user is None:
+        # ====================================================
+        # FORCE JOIN
+        # ====================================================
 
         timer = time.perf_counter()
 
-        user = await UserRepository.create_user(
-            telegram_id=message.from_user.id,
-            username=message.from_user.username,
-            first_name=message.from_user.first_name,
+        try:
+            joined = await check_force_join(
+                message.from_user.id
+            )
+        except Exception as e:
+            print(
+                f"[START] Force join error "
+                f"user={message.from_user.id}: {e}"
+            )
+
+            await message.answer(
+                "⚠️ Unable to verify channel membership right now.\n"
+                "Please try again in a few seconds."
+            )
+            return
+
+        print(
+            f"Force Join: "
+            f"{time.perf_counter() - timer:.3f}s"
         )
 
-        print(f"Create User: {time.perf_counter() - timer:.3f}s")
+        if not joined:
+            return await force_join_message(message)
 
-        await send_log(
-            f"""
+        # ====================================================
+        # GET USER
+        # ====================================================
+
+        timer = time.perf_counter()
+
+        try:
+            user = await UserRepository.get_user(
+                message.from_user.id
+            )
+        except Exception as e:
+            print(
+                f"[START] Database get_user error "
+                f"user={message.from_user.id}: {e}"
+            )
+
+            await message.answer(
+                "⚠️ Temporary database error.\n"
+                "Please try /start again."
+            )
+            return
+
+        print(
+            f"Get User: "
+            f"{time.perf_counter() - timer:.3f}s"
+        )
+
+        # ====================================================
+        # CREATE USER
+        # ====================================================
+
+        if user is None:
+
+            timer = time.perf_counter()
+
+            try:
+                user = await UserRepository.create_user(
+                    telegram_id=message.from_user.id,
+                    username=message.from_user.username,
+                    first_name=message.from_user.first_name or "User",
+                )
+
+            except Exception as e:
+                print(
+                    f"[START] Database create_user error "
+                    f"user={message.from_user.id}: {e}"
+                )
+
+                await message.answer(
+                    "⚠️ Could not create your account.\n"
+                    "Please try /start again."
+                )
+                return
+
+            print(
+                f"Create User: "
+                f"{time.perf_counter() - timer:.3f}s"
+            )
+
+            # New-user logging must NEVER prevent /start
+            try:
+
+                safe_name = escape(
+                    message.from_user.first_name or "User"
+                )
+
+                safe_username = escape(
+                    message.from_user.username or "None"
+                )
+
+                await send_log(
+                    f"""
 🆕 <b>New User</b>
 
-👤 {message.from_user.first_name}
+👤 {safe_name}
 
 🆔 <code>{message.from_user.id}</code>
 
-📎 @{message.from_user.username or "None"}
+📎 @{safe_username}
 """
+                )
+
+            except Exception as e:
+                print(
+                    f"[START] New-user log failed: {e}"
+                )
+
+        # ====================================================
+        # SEND HOME
+        # ====================================================
+
+        timer = time.perf_counter()
+
+        try:
+            await send_home(
+                message,
+                user
+            )
+
+        except Exception as e:
+            print(
+                f"[START] send_home error "
+                f"user={message.from_user.id}: {e}"
+            )
+
+            try:
+                await message.answer(
+                    "⚠️ Something went wrong while opening "
+                    "the bot.\n\n"
+                    "Please send /start again."
+                )
+            except Exception as fallback_error:
+                print(
+                    f"[START] Fallback message failed: "
+                    f"{fallback_error}"
+                )
+
+            return
+
+        print(
+            f"Send Home: "
+            f"{time.perf_counter() - timer:.3f}s"
         )
 
-    timer = time.perf_counter()
+        print(
+            f"START TOTAL: "
+            f"{time.perf_counter() - total_timer:.3f}s"
+        )
 
-    await send_home(
-        message,
-        user
-    )
+    except Exception as e:
 
-    print(f"Send Home: {time.perf_counter() - timer:.3f}s")
-    print(f"START TOTAL: {time.perf_counter() - total_timer:.3f}s")
+        print(
+            f"[START CRITICAL ERROR] "
+            f"user={message.from_user.id}: "
+            f"{type(e).__name__}: {e}"
+        )
 
+        try:
+            await message.answer(
+                "⚠️ Something went wrong.\n"
+                "Please try /start again."
+            )
+        except Exception as fallback_error:
+            print(
+                f"[START] Critical fallback failed: "
+                f"{fallback_error}"
+            )
 
 @router.callback_query(F.data == "home")
 async def home_callback(
