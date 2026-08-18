@@ -1,3 +1,4 @@
+from custom_emojis import button_emoji_id
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.enums import ButtonStyle
 
@@ -17,19 +18,19 @@ def accounts_keyboard(accounts):
     kb.button(
         text="Add Account",
         callback_data="add_account",
-        icon_custom_emoji_id="5287354223141342798"
+        icon_custom_emoji_id=button_emoji_id("5287354223141342798")
     )
 
     kb.button(
         text="Refresh",
         callback_data="my_accounts",
-        icon_custom_emoji_id="5391079723449209646"
+        icon_custom_emoji_id=button_emoji_id("5391079723449209646")
                 )
 
     kb.button(
         text="Home",
         callback_data="home",
-        icon_custom_emoji_id="5193119436621494267"
+        icon_custom_emoji_id=button_emoji_id("5193119436621494267")
     )
 
     kb.adjust(1, 2, 1)
@@ -45,14 +46,14 @@ def account_details_keyboard(account_id):
         text="Remove Account",
         callback_data=f"remove_account_{account_id}",
         style="DANGER",
-        icon_custom_emoji_id="6129486856212979482"
+        icon_custom_emoji_id=button_emoji_id("6129486856212979482")
     )
 
     kb.button(
         text="Back",
         callback_data="my_accounts",
         style="DANGER",
-        icon_custom_emoji_id="5409284148491726576"
+        icon_custom_emoji_id=button_emoji_id("5409284148491726576")
     )
 
     kb.adjust(1, 1)
@@ -73,14 +74,14 @@ def back_keyboard():
         text="Home",
         callback_data="home",
         style="SUCCESS",
-        icon_custom_emoji_id="5193119436621494267"
+        icon_custom_emoji_id=button_emoji_id("5193119436621494267")
     )
 
     kb.button(
         text="Back",
         callback_data="home",
         style="DANGER",
-        icon_custom_emoji_id="5409284148491726576"
+        icon_custom_emoji_id=button_emoji_id("5409284148491726576")
     )
 
     kb.adjust(2)

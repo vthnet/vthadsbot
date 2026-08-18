@@ -1,3 +1,4 @@
+from custom_emojis import button_emoji_id
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
@@ -269,14 +270,14 @@ async def save_account(
         text="Home",
         callback_data="home",
         style="primary",
-       icon_custom_emoji_id="5193119436621494267"
+       icon_custom_emoji_id=button_emoji_id("5193119436621494267")
     )
 
     kb.button(
         text="My Accounts",
         callback_data="my_accounts",
         style="primary",
-        icon_custom_emoji_id="5346136537123801643"
+        icon_custom_emoji_id=button_emoji_id("5346136537123801643")
     )
 
     kb.adjust(2)

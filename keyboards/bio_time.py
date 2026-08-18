@@ -1,3 +1,4 @@
+from custom_emojis import button_emoji_id
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 
@@ -27,7 +28,7 @@ def time_keyboard():
         text="1 Hour (Recommended)",
         callback_data="time_3600",
         style="primary",
-        icon_custom_emoji_id="4987757216040747796"
+        icon_custom_emoji_id=button_emoji_id("4987757216040747796")
     )
 
     kb.button(
@@ -52,14 +53,14 @@ def time_keyboard():
         text="Custom Minutes",
         callback_data="time_custom",
         style="primary",
-        icon_custom_emoji_id="5370951118698339120"
+        icon_custom_emoji_id=button_emoji_id("5370951118698339120")
     )
 
     kb.button(
         text="Back",
         callback_data="bio_continue",
         style="danger",
-        icon_custom_emoji_id="5409284148491726576"
+        icon_custom_emoji_id=button_emoji_id("5409284148491726576")
     )
 
     kb.adjust(2, 2, 2, 1, 1, 1)

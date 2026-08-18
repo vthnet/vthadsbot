@@ -1,3 +1,4 @@
+from custom_emojis import button_emoji_id
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 
@@ -23,7 +24,7 @@ def delay_keyboard(is_premium: bool = False):
             text="Custom Delay",
             callback_data="delay_custom",
             style="primary",
-            icon_custom_emoji_id="5370951118698339120"
+            icon_custom_emoji_id=button_emoji_id("5370951118698339120")
         )
 
     else:
@@ -32,28 +33,28 @@ def delay_keyboard(is_premium: bool = False):
             text="Custom Delay",
             callback_data="premium_delay",
             style="primary",
-            icon_custom_emoji_id="5370951118698339120"
+            icon_custom_emoji_id=button_emoji_id("5370951118698339120")
         )
 
     kb.button(
         text="Lower delay = Higher spam risk",
         callback_data="ignore",
         style="success",
-        icon_custom_emoji_id="6129782440157256336"
+        icon_custom_emoji_id=button_emoji_id("6129782440157256336")
     )
 
     kb.button(
         text="Back",
         callback_data="back_loop",
         style="danger",
-        icon_custom_emoji_id="5409284148491726576"
+        icon_custom_emoji_id=button_emoji_id("5409284148491726576")
     )
 
     kb.button(
         text="Home",
         callback_data="home",
         style="success",
-        icon_custom_emoji_id="5193119436621494267"
+        icon_custom_emoji_id=button_emoji_id("5193119436621494267")
     )
 
     kb.adjust(

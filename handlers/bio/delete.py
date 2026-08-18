@@ -1,3 +1,4 @@
+from custom_emojis import button_emoji_id
 from aiogram import Router, F
 from aiogram.types import CallbackQuery
 from aiogram.utils.keyboard import InlineKeyboardBuilder
@@ -59,7 +60,7 @@ Please add a bio first.
         text="Back",
         callback_data="bio_home",
         style="danger",
-        icon_custom_emoji_id="5193119436621494267"
+        icon_custom_emoji_id=button_emoji_id("5193119436621494267")
     )
 
     kb.adjust(1)

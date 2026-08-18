@@ -1,3 +1,4 @@
+from custom_emojis import button_emoji_id
 from aiogram import Router, F
 from aiogram.types import CallbackQuery
 from aiogram.utils.keyboard import InlineKeyboardBuilder
@@ -24,21 +25,21 @@ async def subscription(callback: CallbackQuery):
             text="Custom Bio",
             callback_data="custom_bio",
             style="primary",
-            icon_custom_emoji_id="5370951118698339120"
+            icon_custom_emoji_id=button_emoji_id("5370951118698339120")
         )
 
         kb.button(
             text="Bio Rotation",
             callback_data="bio_rotation",
             style="primary",
-            icon_custom_emoji_id="5219934485113493317"
+            icon_custom_emoji_id=button_emoji_id("5219934485113493317")
         )
 
         kb.button(
             text="Home",
             callback_data="home",
             style="success",
-            icon_custom_emoji_id="5193119436621494267"
+            icon_custom_emoji_id=button_emoji_id("5193119436621494267")
         )
 
         kb.adjust(1)
@@ -66,14 +67,14 @@ async def subscription(callback: CallbackQuery):
             text="Buy Premium",
             callback_data="buy_premium",
             style="success",
-            icon_custom_emoji_id="5262747715552438702"
+            icon_custom_emoji_id=button_emoji_id("5262747715552438702")
         )
 
         kb.button(
             text="Home",
             callback_data="home",
             style="danger",
-            icon_custom_emoji_id="5193119436621494267"
+            icon_custom_emoji_id=button_emoji_id("5193119436621494267")
         )
 
         kb.adjust(1)

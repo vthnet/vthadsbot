@@ -1,3 +1,4 @@
+from custom_emojis import button_emoji_id
 from aiogram import Router, F
 from aiogram.types import CallbackQuery
 from aiogram.utils.keyboard import InlineKeyboardBuilder
@@ -81,14 +82,14 @@ want to configure it again.
         text="Continue (0)",
         callback_data="bio_finish_selection",
         style="success",
-        icon_custom_emoji_id="4987757216040747796"
+        icon_custom_emoji_id=button_emoji_id("4987757216040747796")
     )
 
     kb.button(
         text="Back",
         callback_data="bio_enable",
         style="danger",
-        icon_custom_emoji_id="5409284148491726576"
+        icon_custom_emoji_id=button_emoji_id("5409284148491726576")
     )
 
     kb.adjust(1)

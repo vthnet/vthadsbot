@@ -1,3 +1,4 @@
+from custom_emojis import button_emoji_id
 from aiogram import Router, F
 import asyncio
 from aiogram.types import (
@@ -31,7 +32,7 @@ async def support(callback: CallbackQuery):
         text="🏠 Back",
         callback_data="home",
         style="success",
-                    icon_custom_emoji_id="5193119436621494267"
+                    icon_custom_emoji_id=button_emoji_id("5193119436621494267")
     )
 
     kb.adjust(1)
@@ -192,7 +193,7 @@ Example:
         text="🏠 Home",
         callback_data="home",
         style="success",
-                    icon_custom_emoji_id="5193119436621494267"
+                    icon_custom_emoji_id=button_emoji_id("5193119436621494267")
     )
 
     await message.bot.edit_message_text(

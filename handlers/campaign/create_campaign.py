@@ -1,3 +1,4 @@
+from custom_emojis import button_emoji_id
 import asyncio
 
 from aiogram import Router, F
@@ -98,14 +99,14 @@ def no_account_keyboard():
         text="Add Account",
         callback_data="add_account",
         style="primary",
-        icon_custom_emoji_id="5287354223141342798"
+        icon_custom_emoji_id=button_emoji_id("5287354223141342798")
     )
 
     kb.button(
         text="Back",
         callback_data="home",
         style="danger",
-        icon_custom_emoji_id="5409284148491726576"
+        icon_custom_emoji_id=button_emoji_id("5409284148491726576")
     )
 
     kb.adjust(1, 1)
@@ -247,20 +248,20 @@ account and add a new one.
         kb.button(
             text="➕ Add Telegram Account",
             callback_data="add_account",
-            icon_custom_emoji_id="5193119436621494267"
+            icon_custom_emoji_id=button_emoji_id("5193119436621494267")
         )
 
         kb.button(
             text="📊 My Campaigns",
             callback_data="my_campaigns",
-            icon_custom_emoji_id="5193119436621494267"
+            icon_custom_emoji_id=button_emoji_id("5193119436621494267")
         )
 
         kb.button(
             text="Home",
             callback_data="home",
             style="success",
-            icon_custom_emoji_id="5193119436621494267"
+            icon_custom_emoji_id=button_emoji_id("5193119436621494267")
 
         )
 
@@ -972,11 +973,13 @@ Safest option.
 
     data = await state.get_data()
 
+    infinite = data.get("infinite", False)
+
     loops = (
         "♾ Infinite"
-        if data["infinite"]
-        else str(data["loop_count"])
-    )
+        if infinite
+        else str(data.get("loop_count", 0))
+)
 
     await state.set_state(
         CampaignState.waiting_confirm
@@ -988,14 +991,14 @@ Safest option.
         text="Start Campaign",
         callback_data="confirm_campaign",
         style="success",
-        icon_custom_emoji_id="5389057356493511934"
+        icon_custom_emoji_id=button_emoji_id("5389057356493511934")
     )
 
     kb.button(
         text="Back",
         callback_data="back_loop_interval",
         style="danger",
-        icon_custom_emoji_id="5409284148491726576"
+        icon_custom_emoji_id=button_emoji_id("5409284148491726576")
     )
 
     kb.adjust(1)
@@ -1065,13 +1068,13 @@ Start this campaign?
             text="Start Campaign",
             callback_data="confirm_campaign",
             style="success",
-            icon_custom_emoji_id="4987757216040747796"
+            icon_custom_emoji_id=button_emoji_id("4987757216040747796")
         )
         .button(
             text="Cancel",
             callback_data="home",
             style="danger",
-            icon_custom_emoji_id="5846210329700217522"
+            icon_custom_emoji_id=button_emoji_id("5846210329700217522")
         )
         .adjust(1)
         .as_markup()
@@ -1160,14 +1163,14 @@ async def confirm_campaign(
     text="My Campaigns",
     callback_data="my_campaigns",
     style="primary",
-    icon_custom_emoji_id="5409111052719767901"
+    icon_custom_emoji_id=button_emoji_id("5409111052719767901")
 )
 
     kb.button(
     text="Home",
     callback_data="home",
     style="success",
-    icon_custom_emoji_id="5193119436621494267"
+    icon_custom_emoji_id=button_emoji_id("5193119436621494267")
 )
 
     kb.adjust(1)
@@ -1259,7 +1262,7 @@ async def custom_repeat_interval(
         text="Start Campaign",
         callback_data="confirm_campaign",
         style="success",
-        icon_custom_emoji_id="4987757216040747796"
+        icon_custom_emoji_id=button_emoji_id("4987757216040747796")
     )
 
     kb.adjust(1)

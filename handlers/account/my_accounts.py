@@ -1,3 +1,4 @@
+from custom_emojis import button_emoji_id
 import asyncio
 
 from aiogram import Router, F
@@ -54,14 +55,14 @@ Checking all Telegram accounts.
             text="Add Account",
             callback_data="add_account",
             style="primary",
-            icon_custom_emoji_id="5287354223141342798"
+            icon_custom_emoji_id=button_emoji_id("5287354223141342798")
         )
 
         kb.button(
             text="Home",
             callback_data="home",
             style="primary",
-            icon_custom_emoji_id="5193119436621494267"
+            icon_custom_emoji_id=button_emoji_id("5193119436621494267")
         )
 
         kb.adjust(1)

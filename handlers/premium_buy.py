@@ -1,3 +1,4 @@
+from custom_emojis import button_emoji_id
 from aiogram import Router, F
 from aiogram.types import (
     CallbackQuery,
@@ -27,14 +28,14 @@ async def buy_premium(callback: CallbackQuery):
         text="I've Paid",
         callback_data="premium_paid",
         style="success",
-        icon_custom_emoji_id="4987757216040747796"
+        icon_custom_emoji_id=button_emoji_id("4987757216040747796")
     )
 
     kb.button(
         text="home",
         callback_data="home",
         style="danager",
-        icon_custom_emoji_id="5193119436621494267"
+        icon_custom_emoji_id=button_emoji_id("5193119436621494267")
     )
 
     kb.adjust(1)
@@ -107,13 +108,13 @@ async def receive_payment_details(
                     text="Approve",
                     callback_data=f"approve_premium_{message.from_user.id}",
                     style="success",
-                    icon_custom_emoji_id="4987757216040747796"
+                    icon_custom_emoji_id=button_emoji_id("4987757216040747796")
                 ),
                 InlineKeyboardButton(
                     text="Reject",
                     callback_data=f"reject_premium_{message.from_user.id}",
                     style="danager",
-                    icon_custom_emoji_id="5846210329700217522"
+                    icon_custom_emoji_id=button_emoji_id("5846210329700217522")
                 )
             ]
         ]
