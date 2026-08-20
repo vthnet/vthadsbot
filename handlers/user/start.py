@@ -77,13 +77,13 @@ async def send_home(
     # Temporary safe text (to test HTML issue)
    
     text = f""" 
-☆ Welcome to VTH ADS BOT
+ <b>Welcome to VTH ADS BOT</b>
 <blockquote>To the ultimate Telegram advertising platform powered by VTH Network.
 What Bot Can Do:
 • Create & manage ad campaigns(ads)
 • Run free advertisements
 • Add multiple Telegram accounts
-• Auto Bio Rotation (up to 5 bios) etc..</blockquote>.
+• Auto Bio Rotation (up to 5 bios) etc..</blockquote>
 Bot's detail guide : @vthadsguide
 Support : @vthnetsupport
 """

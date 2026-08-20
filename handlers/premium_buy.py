@@ -1,4 +1,4 @@
-from custom_emojis import button_emoji_id
+from custom_emojis import button_emoji_id, premiumize_text
 from aiogram import Router, F
 from aiogram.types import (
     CallbackQuery,
@@ -34,7 +34,7 @@ async def buy_premium(callback: CallbackQuery):
     kb.button(
         text="home",
         callback_data="home",
-        style="danager",
+        style="danger",
         icon_custom_emoji_id=button_emoji_id("5193119436621494267")
     )
 
@@ -47,10 +47,10 @@ async def buy_premium(callback: CallbackQuery):
 -------------------------
 💰 Price :<b>{PRICE} / x $</b>
 ♾ Lifetime Membership
--------------------------
+<blockquote>-------------------------
 UPI ID (₹) :<code>{UPI_ID}</code>
-Binance uid ($): <code></code>
--------------------------
+Binance uid ($): <code>922339798</code>
+-------------------------</blockquote>
 •After payment,Click <b>I've Paid</b>
 
 •Admin will verify your payment and activate Premium.
@@ -113,7 +113,7 @@ async def receive_payment_details(
                 InlineKeyboardButton(
                     text="Reject",
                     callback_data=f"reject_premium_{message.from_user.id}",
-                    style="danager",
+                    style="danger",
                     icon_custom_emoji_id=button_emoji_id("5846210329700217522")
                 )
             ]
